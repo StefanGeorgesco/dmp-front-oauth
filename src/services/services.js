@@ -1,24 +1,15 @@
 import axios from "axios";
-import { Buffer } from "buffer";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore.js";
 
-const baseUrl = "/dmp";
-
-let router;
-
-import("../router").then((obj) => (router = obj.default));
+const baseUrl = "/api";
 
 axios.interceptors.request.use((request) => {
   const authStore = useAuthUserStore();
-
-  if (authStore.authorization) {
-    request.headers.common.Authorization = authStore.authorization;
+  if (authStore.token) {
+    request.headers.common.Authorization = "bearer " + authStore.token;
   }
-  if (
-    ["post", "put"].includes(request.method) &&
-    request.url !== `${baseUrl}/login`
-  ) {
+  if (["post", "put"].includes(request.method)) {
     request.headers["Content-Type"] = "application/json";
   }
   request.headers["X-Requested-With"] = "XMLHttpRequest";
@@ -31,17 +22,8 @@ axios.interceptors.response.use(
     return response;
   },
   async function (error) {
-    const authStore = useAuthUserStore();
     const msgStore = useMessagesStore();
-
-    if (
-      router.currentRoute.value.name !== "login" &&
-      error.response.status === 401
-    ) {
-      msgStore.setErrorMessage("Vous devez vous reconnecter.");
-      authStore.logout();
-      router.push("/login");
-    } else if (error.response.status >= 500) {
+    if (error.response.status >= 500) {
       msgStore.setErrorMessage(
         "Impossible de se connecter au serveur. Veuillez réessayer."
       );
@@ -51,18 +33,6 @@ axios.interceptors.response.use(
 );
 
 export class Service {
-  static login(user) {
-    let headers = {
-      Authorization:
-        "Basic " +
-        Buffer.from(user.username + ":" + user.password, "utf8").toString(
-          "base64"
-        ),
-    };
-
-    return axios.post(`${baseUrl}/login`, null, { headers });
-  }
-
   static signUp(user) {
     return axios.post(`${baseUrl}/user`, user);
   }

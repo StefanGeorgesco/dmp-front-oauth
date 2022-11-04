@@ -96,9 +96,6 @@ export default {
       },
     };
   },
-  created() {
-    this.reloadAuth();
-  },
   watch: {
     $route() {
       this.state++;
