@@ -300,7 +300,7 @@ export default {
         },
         copy() {
             navigator.clipboard.writeText(this.creationCode)
-                .then(() => this.setSuccessMessage("Le code a bine été copié dans le presse-papier."))
+                .then(() => this.setSuccessMessage("Le code a bien été copié dans le presse-papier."))
                 .catch(() => this.setErrorMessage("Impossible de copier le code. Veuillez le copier 'à la main'."));
         },
         ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
