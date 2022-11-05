@@ -13,10 +13,10 @@ export const useAuthUserStore = defineStore({
       )[0],
   },
   actions: {
-    async login() {
+    login() {
       this.keycloak.login({ redirectUri: "http://localhost:5173/main" });
     },
-    async logout() {
+    logout() {
       this.keycloak.logout({ redirectUri: "http://localhost:5173/" });
     },
   },
