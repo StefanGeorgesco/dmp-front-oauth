@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 
 const HomeComponent = () => import("../components/HomeComponent.vue");
+const MainComponent = () => import("../components/MainComponent.vue");
 const SignUp = () => import("../components/SignUp.vue");
 const PersonalData = () => import("../components/PersonalData.vue");
 const AddFile = () => import("../components/AddFile.vue");
@@ -13,13 +14,21 @@ const authGuard = (roles) => {
     const store = useAuthUserStore();
     if (!store.isAuthenticated) {
       store.login();
-    }
-    if (roles && !roles.includes(store.role)) {
-      return { path: "/" };
+    } else if (roles && !roles.includes(store.role)) {
+      return { path: "/main" };
     } else {
       return true;
     }
   };
+};
+
+const redirectToMainIfLoggedIn = () => {
+  const store = useAuthUserStore();
+  if (store.isAuthenticated) {
+    return { path: "/main" };
+  } else {
+    return true;
+  }
 };
 
 const router = createRouter({
@@ -29,11 +38,18 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeComponent,
+      beforeEnter: redirectToMainIfLoggedIn,
     },
     {
       path: "/sign-up",
       name: "sign-up",
       component: SignUp,
+    },
+    {
+      path: "/main",
+      name: "main",
+      component: MainComponent,
+      beforeEnter: authGuard(),
     },
     {
       path: "/personal-data",
@@ -76,16 +92,6 @@ const router = createRouter({
       beforeEnter: authGuard(["DOCTOR"]),
     },
   ],
-});
-
-router.beforeEach(async (to, from, next) => {
-  const store = useAuthUserStore();
-  if (to.name !== "sign-up" && !store.isAuthenticated) {
-    await store.login();
-    next({ name: to.name });
-  } else {
-    next();
-  }
 });
 
 export default router;

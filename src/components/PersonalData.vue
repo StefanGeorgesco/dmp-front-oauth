@@ -115,8 +115,8 @@
     </div>
     <br>
     <div class="col-12">
-      <RouterLink to="/" type="button" class="btn btn-light"><i class="fa-solid fa-right-from-bracket"></i> Retour
-      </RouterLink>
+      <button @click="$router.go(-1);" type="button" class="btn btn-light">
+        <i class="fa-solid fa-right-from-bracket"></i> Retour</button>
     </div>
     <br>
   </div>

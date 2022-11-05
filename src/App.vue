@@ -11,8 +11,8 @@
         </button>
         <div @click="foldMenu" class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <RouterLink class="nav-link" to="/">
+            <li class="nav-item" v-show="isAuthenticated">
+              <RouterLink class="nav-link" to="/main">
                 <i class="fa-solid fa-house"></i>
               </RouterLink>
             </li>
@@ -40,12 +40,20 @@
                   <hr class="dropdown-divider" />
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#" @click="doLogout">Déconnexion</a>
+                  <a class="dropdown-item" href="/" @click.prevent="logout">Déconnexion</a>
                 </li>
               </ul>
             </li>
             <li v-if="isAuthenticated" class="nav-item">
               <i class="nav-link">{{ roles[role] }}</i>
+            </li>
+            <li v-show="!isAuthenticated" class="nav-item">
+              <i class="nav-link" @click="login">Login</i>
+            </li>
+            <li v-show="!isAuthenticated" class="nav-item">
+              <RouterLink class="nav-link" to="/sign-up">
+                S'enregistrer
+              </RouterLink>
             </li>
           </ul>
         </div>
@@ -115,11 +123,7 @@ export default {
     foldMenu() {
       this.$refs.navbarToggler.click();
     },
-    doLogout() {
-      this.logout();
-      this.$router.push("/");
-    },
-    ...mapActions(useAuthUserStore, ["reloadAuth", "logout"]),
+    ...mapActions(useAuthUserStore, ["login", "logout"]),
   },
 };
 </script>

@@ -1,39 +1,33 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="container" v-if="role === 'ADMIN'">
-    <br>
-    <div class="col-12">
-      <RouterLink to="/manage-doctors" type="button" class="btn btn-light">Gérer les dossiers des médecins</RouterLink>
-    </div>
-    <br>
-    <div class="col-12">
-      <RouterLink to="/manage-patient-files" type="button" class="btn btn-light">Gérer les dossiers patients
-      </RouterLink>
-    </div>
-  </div>
-  <ManageFiles type="patientFile" v-else-if="role === 'DOCTOR'" />
-  <PatientFile v-else-if="role === 'PATIENT'"/>
-  <div class="container" v-else>Type inconnu</div>
+  <h1>Bienvenue</h1>
+  <img src="../assets/img/medical.jpg" alt="">
 </template>
 
 <!-- eslint-disable prettier/prettier -->
 <script>
-import { mapState } from "pinia";
-import { useAuthUserStore } from "../stores/authUserStore.js";
-import ManageFiles from "./ManageFiles.vue";
-import PatientFile from "./PatientFile.vue";
-
 export default {
-  name: "HomeComponent",
-  components : {
-    ManageFiles, PatientFile,
-  },
-  computed: {
-    ...mapState(useAuthUserStore, ["role"]),
-  },
-};
+    name: "HomeComponent",
+}
 </script>
 
 <!-- eslint-disable prettier/prettier -->
-<style>
+<style scoped>
+h1 {
+    position: relative;
+    width: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0.5em 0;
+    opacity: 50%;
+    text-align: center;
+  }
+  img {
+    position: relative;
+    width: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99;
+    box-shadow: 10px 10px 12px rgba(0, 0, 0, 0.2);
+  }
 </style>

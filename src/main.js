@@ -15,23 +15,23 @@ let pinia = createPinia();
 pinia.use(() => ({ keycloak }));
 
 keycloak
-  .init({ onLoad: initOptions.onLoad })
+  .init({
+    onLoad: "check-sso",
+    checkLoginIframe: false,
+  })
   .then((auth) => {
     if (!auth) {
-      console.log("Not authenticated");
-      console.log(keycloak);
+      console.log("Not authenticated on keycloak init");
     } else {
-      console.log("Authenticated");
-      console.log(keycloak);
+      console.log("Authenticated on keycloak init");
     }
+    console.log(keycloak);
 
     const app = createApp(App);
-    app.provide("keycloak", keycloak);
     app.use(pinia);
     app.use(router);
     app.mount("#app");
 
-    //Token Refresh
     setInterval(() => {
       keycloak
         .updateToken(70)
