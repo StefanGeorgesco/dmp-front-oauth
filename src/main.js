@@ -17,7 +17,8 @@ pinia.use(() => ({ keycloak }));
 keycloak
   .init({
     onLoad: "check-sso",
-    checkLoginIframe: false,
+    silentCheckSsoRedirectUri:
+      window.location.origin + "/silent-check-sso.html",
   })
   .then((auth) => {
     if (!auth) {
