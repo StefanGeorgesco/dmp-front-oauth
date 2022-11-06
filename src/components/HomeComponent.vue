@@ -24,7 +24,7 @@ h1 {
   }
   img {
     position: relative;
-    width: 40%;
+    width: max(40vw, 20rem);
     left: 50%;
     transform: translateX(-50%);
     z-index: 99;

@@ -48,7 +48,7 @@
               <i class="nav-link">{{ roles[role] }}</i>
             </li>
             <li v-show="!isAuthenticated" class="nav-item">
-              <i class="nav-link" @click="login">Login</i>
+              <a class="nav-link" href="/" @click.prevent="login">Login</a>
             </li>
             <li v-show="!isAuthenticated" class="nav-item">
               <RouterLink class="nav-link" to="/sign-up">
