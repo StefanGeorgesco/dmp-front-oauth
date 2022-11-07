@@ -8,9 +8,11 @@ import Keycloak from "keycloak-js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
-import initOptions from "../keycloak.init.options";
-
-let keycloak = new Keycloak(initOptions);
+let keycloak = new Keycloak({
+  url: import.meta.env.VITE_KEYCLOAK_BASE_URL,
+  realm: import.meta.env.VITE_KEYCLOAK_REALM,
+  clientId: import.meta.env.VITE_KEYCLOAK_CLIENTID,
+});
 let pinia = createPinia();
 pinia.use(() => ({ keycloak }));
 
