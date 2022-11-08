@@ -14,10 +14,14 @@ export const useAuthUserStore = defineStore({
   },
   actions: {
     login() {
-      this.keycloak.login({ redirectUri: window.location.origin + "/main" });
+      this.keycloak.login({
+        redirectUri: window.location.origin + import.meta.env.BASE_URL,
+      });
     },
     logout() {
-      this.keycloak.logout({ redirectUri: window.location.origin + "/" });
+      this.keycloak.logout({
+        redirectUri: window.location.origin + import.meta.env.BASE_URL,
+      });
     },
   },
 });
