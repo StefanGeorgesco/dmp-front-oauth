@@ -32,7 +32,7 @@ const redirectToMainIfLoggedIn = () => {
 };
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.VITE_APP_BASE_URL),
   routes: [
     {
       path: "/",
