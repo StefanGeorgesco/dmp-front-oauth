@@ -5,6 +5,8 @@ import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/dmp/",
+
   server: {
     proxy: {
       "^/api": {
@@ -17,6 +19,7 @@ export default defineConfig({
       usePolling: true,
     },
   },
+
   plugins: [vue()],
   resolve: {
     alias: {
