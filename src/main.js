@@ -20,7 +20,9 @@ keycloak
   .init({
     onLoad: "check-sso",
     silentCheckSsoRedirectUri:
-      window.location.origin + "/silent-check-sso.html",
+      window.location.origin +
+      import.meta.env.BASE_URL +
+      "silent-check-sso.html",
   })
   .then((auth) => {
     if (!auth) {
