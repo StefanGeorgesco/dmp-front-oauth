@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore.js";
 
-const baseUrl = "/api";
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 axios.interceptors.request.use((request) => {
   const authStore = useAuthUserStore();
@@ -34,73 +34,73 @@ axios.interceptors.response.use(
 
 export class Service {
   static signUp(user) {
-    return axios.post(`${baseUrl}/user`, user);
+    return axios.post(`${apiBaseUrl}user`, user);
   }
 
   static addPatientFile(patientFile) {
-    return axios.post(`${baseUrl}/patient-file`, patientFile);
+    return axios.post(`${apiBaseUrl}patient-file`, patientFile);
   }
 
   static addDoctor(doctor) {
-    return axios.post(`${baseUrl}/doctor`, doctor);
+    return axios.post(`${apiBaseUrl}doctor`, doctor);
   }
 
   static getSpecialties() {
-    return axios.get(`${baseUrl}/specialty`);
+    return axios.get(`${apiBaseUrl}specialty`);
   }
 
   static getDoctorDetails() {
-    return axios.get(`${baseUrl}/doctor/details`);
+    return axios.get(`${apiBaseUrl}doctor/details`);
   }
 
   static getPatientFileDetails() {
-    return axios.get(`${baseUrl}/patient-file/details`);
+    return axios.get(`${apiBaseUrl}patient-file/details`);
   }
 
   static updateDoctorDetails(doctor) {
-    return axios.put(`${baseUrl}/doctor/details`, doctor);
+    return axios.put(`${apiBaseUrl}doctor/details`, doctor);
   }
 
   static updatePatientFileDetails(patientFile) {
-    return axios.put(`${baseUrl}/patient-file/details`, patientFile);
+    return axios.put(`${apiBaseUrl}patient-file/details`, patientFile);
   }
 
   static findDoctorsByIdOrFirstnameOrLastname(q) {
-    let uri = encodeURI(`${baseUrl}/doctor?q=${q}`);
+    let uri = encodeURI(`${apiBaseUrl}doctor?q=${q}`);
     return axios.get(uri);
   }
 
   static findPatientFilesByIdOrFirstnameOrLastname(q) {
-    let uri = encodeURI(`${baseUrl}/patient-file?q=${q}`);
+    let uri = encodeURI(`${apiBaseUrl}patient-file?q=${q}`);
     return axios.get(uri);
   }
 
   static findObjectBySearchString(objectType, q) {
-    let uri = encodeURI(`${baseUrl}/${objectType}?q=${q}`);
+    let uri = encodeURI(`${apiBaseUrl}${objectType}?q=${q}`);
     return axios.get(uri);
   }
 
   static getDoctor(id) {
-    let uri = encodeURI(`${baseUrl}/doctor/${id}`);
+    let uri = encodeURI(`${apiBaseUrl}doctor/${id}`);
     return axios.get(uri);
   }
 
   static deleteDoctor(id) {
-    let uri = encodeURI(`${baseUrl}/doctor/${id}`);
+    let uri = encodeURI(`${apiBaseUrl}doctor/${id}`);
     return axios.delete(uri);
   }
 
   static deletePatientFile(id) {
-    let uri = encodeURI(`${baseUrl}/patient-file/${id}`);
+    let uri = encodeURI(`${apiBaseUrl}patient-file/${id}`);
     return axios.delete(uri);
   }
 
   static getPatientFile(id) {
     let uri;
     if (id) {
-      uri = encodeURI(`${baseUrl}/patient-file/${id}`);
+      uri = encodeURI(`${apiBaseUrl}patient-file/${id}`);
     } else {
-      uri = encodeURI(`${baseUrl}/patient-file/details`);
+      uri = encodeURI(`${apiBaseUrl}patient-file/details`);
     }
     return axios.get(uri);
   }
@@ -109,10 +109,10 @@ export class Service {
     let uri;
     if (patientFileId) {
       uri = encodeURI(
-        `${baseUrl}/patient-file/${patientFileId}/correspondence`
+        `${apiBaseUrl}patient-file/${patientFileId}/correspondence`
       );
     } else {
-      uri = encodeURI(`${baseUrl}/patient-file/details/correspondence`);
+      uri = encodeURI(`${apiBaseUrl}patient-file/details/correspondence`);
     }
     return axios.get(uri);
   }
@@ -120,49 +120,49 @@ export class Service {
   static getItems(patientFileId) {
     let uri;
     if (patientFileId) {
-      uri = encodeURI(`${baseUrl}/patient-file/${patientFileId}/item`);
+      uri = encodeURI(`${apiBaseUrl}patient-file/${patientFileId}/item`);
     } else {
-      uri = encodeURI(`${baseUrl}/patient-file/details/item`);
+      uri = encodeURI(`${apiBaseUrl}patient-file/details/item`);
     }
     return axios.get(uri);
   }
 
   static addCorrespondence(correspondence) {
     let uri = encodeURI(
-      `${baseUrl}/patient-file/${correspondence.patientFileId}/correspondence`
+      `${apiBaseUrl}patient-file/${correspondence.patientFileId}/correspondence`
     );
     return axios.post(uri, correspondence);
   }
 
   static deleteCorrespondence(correspondence) {
     let uri = encodeURI(
-      `${baseUrl}/patient-file/${correspondence.patientFileId}/correspondence/${correspondence.id}`
+      `${apiBaseUrl}patient-file/${correspondence.patientFileId}/correspondence/${correspondence.id}`
     );
     return axios.delete(uri);
   }
 
   static addItem(item) {
-    let uri = encodeURI(`${baseUrl}/patient-file/${item.patientFileId}/item`);
+    let uri = encodeURI(`${apiBaseUrl}patient-file/${item.patientFileId}/item`);
     return axios.post(uri, item);
   }
 
   static updateItem(item) {
     let uri = encodeURI(
-      `${baseUrl}/patient-file/${item.patientFileId}/item/${item.id}`
+      `${apiBaseUrl}patient-file/${item.patientFileId}/item/${item.id}`
     );
     return axios.put(uri, item);
   }
 
   static deleteItem(item) {
     let uri = encodeURI(
-      `${baseUrl}/patient-file/${item.patientFileId}/item/${item.id}`
+      `${apiBaseUrl}patient-file/${item.patientFileId}/item/${item.id}`
     );
     return axios.delete(uri, item);
   }
 
   static updateReferringDoctor(patientFileId, referringDoctor) {
     let uri = encodeURI(
-      `${baseUrl}/patient-file/${patientFileId}/referring-doctor`
+      `${apiBaseUrl}patient-file/${patientFileId}/referring-doctor`
     );
     return axios.put(uri, referringDoctor);
   }
