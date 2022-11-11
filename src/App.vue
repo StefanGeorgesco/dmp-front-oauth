@@ -104,6 +104,9 @@ export default {
       },
     };
   },
+  created() {
+    this.initAuth();
+  },
   watch: {
     $route() {
       this.state++;
@@ -123,7 +126,7 @@ export default {
     foldMenu() {
       this.$refs.navbarToggler.click();
     },
-    ...mapActions(useAuthUserStore, ["login", "logout"]),
+    ...mapActions(useAuthUserStore, ["initAuth", "login", "logout"]),
   },
 };
 </script>
