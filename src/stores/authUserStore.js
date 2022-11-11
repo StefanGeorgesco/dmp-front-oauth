@@ -1,5 +1,10 @@
 import { defineStore } from "pinia";
 
+let minValidity = parseInt(import.meta.env.VITE_KEYCLOAK_TOKEN_MIN_VALIDITY);
+let refreshPeriod = parseInt(
+  import.meta.env.VITE_KEYCLOAK_TOKEN_REFRESH_PERIOD
+);
+
 export const useAuthUserStore = defineStore({
   id: "authUser",
   state: () => ({
@@ -24,7 +29,7 @@ export const useAuthUserStore = defineStore({
       if (this._authenticated) {
         setInterval(() => {
           this.keycloak
-            .updateToken(import.meta.env.VITE_KEYCLOAK_TOKEN_MIN_VALIDITY)
+            .updateToken(minValidity)
             .then((refreshed) => {
               if (refreshed) {
                 this.updateAuth();
@@ -33,7 +38,7 @@ export const useAuthUserStore = defineStore({
             .catch(() => {
               console.error("User authentication token refresh failed");
             });
-        }, import.meta.env.VITE_KEYCLOAK_TOKEN_REFRESH_PERIOD * 1000);
+        }, 1000 * refreshPeriod);
       }
     },
     updateAuth() {
