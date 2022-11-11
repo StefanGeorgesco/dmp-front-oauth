@@ -32,5 +32,5 @@ keycloak
     app.mount("#app");
   })
   .catch(() => {
-    console.error("User authentication failed");
+    console.error("User authentication check failed");
   });

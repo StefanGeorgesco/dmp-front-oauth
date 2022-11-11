@@ -31,7 +31,7 @@ export const useAuthUserStore = defineStore({
               }
             })
             .catch(() => {
-              console.error("Failed to refresh token");
+              console.error("User authentication token refresh failed");
             });
         }, import.meta.env.VITE_KEYCLOAK_TOKEN_REFRESH_PERIOD * 1000);
       }

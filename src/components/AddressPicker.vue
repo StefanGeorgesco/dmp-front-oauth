@@ -56,7 +56,7 @@ export default {
             navigator.geolocation.getCurrentPosition((position) => {
                 this.longitude = position.coords.longitude;
                 this.latitude = position.coords.latitude;
-            }, () => console.error("impossible de déterminer la position"), { enableHighAccuracy: true });
+            }, () => console.error("Client geolocation failed"), { enableHighAccuracy: true });
         }
     },
     methods: {
