@@ -13,9 +13,6 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
-    watch: {
-      usePolling: true,
-    },
   },
 
   plugins: [vue()],
