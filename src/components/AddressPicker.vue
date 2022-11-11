@@ -36,7 +36,6 @@ export default {
         clearLoaderService: {
             type: Function,
             defaut() {
-                return;
             }
         }
     },
