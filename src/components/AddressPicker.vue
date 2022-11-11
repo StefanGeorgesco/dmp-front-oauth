@@ -25,7 +25,7 @@ export default {
         errorMessageService: {
             type: Function,
             default(m) {
-                console.log(m);
+                console.error(m);
             },
         },
         setLoaderService: {
@@ -35,8 +35,8 @@ export default {
         },
         clearLoaderService: {
             type: Function,
-            defaut(id) {
-                console.log(id);
+            defaut() {
+                return;
             }
         }
     },
@@ -57,8 +57,7 @@ export default {
             navigator.geolocation.getCurrentPosition((position) => {
                 this.longitude = position.coords.longitude;
                 this.latitude = position.coords.latitude;
-                console.log(`lon: ${this.longitude}, lat: ${this.latitude}`);
-            }, () => console.log("impossible de déterminer la position"), { enableHighAccuracy: true });
+            }, () => console.error("impossible de déterminer la position"), { enableHighAccuracy: true });
         }
     },
     methods: {
