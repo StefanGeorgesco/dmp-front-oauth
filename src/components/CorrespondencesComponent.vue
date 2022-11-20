@@ -120,7 +120,7 @@ export default {
         }
         this.searchString = "";
       } catch (error) {
-        if (error.response.data) {
+        if (error.response.data?.message) {
           this.setErrorMessage(error.response.data.message);
         }
       } finally {

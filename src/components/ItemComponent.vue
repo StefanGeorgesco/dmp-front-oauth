@@ -302,12 +302,8 @@ export default {
                     this.$emit("editingEnd");
                     this.setSuccessMessage(`L'élément a bien été ${action}.`);
                 } catch (error) {
-                    if (error.response.data) {
-                        if (error.response.status === 406) {
-                            this.setErrorMessage(Object.values(error.response.data).join(", "));
-                        } else {
-                            this.setErrorMessage(error.response.data.message);
-                        }
+                    if (error.response.data?.message) {
+                        this.setErrorMessage(error.response.data.message);
                     }
                 } finally {
                     this.clearLoader(id);
@@ -326,7 +322,7 @@ export default {
                 this.$emit("editingEnd");
                 this.setSuccessMessage(`L'élément a bien été supprimé.`);
             } catch (error) {
-                if (error.response.data) {
+                if (error.response.data?.message) {
                     this.setErrorMessage(error.response.data.message);
                 }
             } finally {

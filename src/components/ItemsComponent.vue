@@ -125,7 +125,7 @@ export default {
         let response = await Service.getItems(this.routeId);
         this.fetchedItems = response.data;
       } catch (error) {
-        if (error.response.data) {
+        if (error.response.data?.message) {
           this.setErrorMessage(error.response.data.message);
         }
       } finally {

@@ -64,7 +64,7 @@ export default {
                 this.$emit("correspondenceUpdated");
                 this.setSuccessMessage("La correspondance a bien été supprimée.");
             } catch (error) {
-                if (error.response.data) {
+                if (error.response.data?.message) {
                     this.setErrorMessage(error.response.data.message);
                 }
             }

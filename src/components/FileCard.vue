@@ -160,7 +160,7 @@ export default {
                 let response = await Service.getDoctor(this.file.referringDoctorId);
                 this.referringDoctor = response.data;
             } catch (error) {
-                if (error.response.data) {
+                if (error.response.data?.message) {
                     this.setErrorMessage(error.response.data.message);
                 }
             } finally {
@@ -179,12 +179,8 @@ export default {
                 this.$emit("referringDoctorUpdated", this.file);
             } catch (error) {
                 this.canEdit = false;
-                if (error.response.data) {
-                    if (error.response.status === 406) {
-                        this.setErrorMessage(Object.values(error.response.data).join(", "));
-                    } else {
-                        this.setErrorMessage(error.response.data.message);
-                    }
+                if (error.response.data?.message) {
+                    this.setErrorMessage(error.response.data.message);
                 }
             } finally {
                 this.clearLoader(id);

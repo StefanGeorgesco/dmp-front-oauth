@@ -127,14 +127,8 @@ export default {
           this.$emit("correspondenceAdded");
           this.setSuccessMessage("La correspondance a bien été créée.");
         } catch (error) {
-          if (error.response.data) {
-            if (error.response.status === 406) {
-              this.setErrorMessage(
-                Object.values(error.response.data).join(", ")
-              );
-            } else {
-              this.setErrorMessage(error.response.data.message);
-            }
+          if (error.response.data?.message) {
+            this.setErrorMessage(error.response.data.message);
           }
         } finally {
           this.clearLoader(id);

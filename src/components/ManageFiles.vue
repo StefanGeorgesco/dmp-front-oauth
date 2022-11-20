@@ -88,7 +88,7 @@ export default {
         let response = await service(this.searchString);
         this.foundFiles = response.data;
       } catch (error) {
-        if (error.response.data) {
+        if (error.response.data?.message) {
           this.setErrorMessage(error.response.data.message);
         }
       } finally {

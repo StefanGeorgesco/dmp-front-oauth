@@ -73,7 +73,7 @@ export default {
       let response = await Service.getPatientFile(this.routeId);
       this.file = response.data;
     } catch (error) {
-      if (error.response.data) {
+      if (error.response.data?.message) {
         this.setErrorMessage(error.response.data.message);
       }
     } finally {
