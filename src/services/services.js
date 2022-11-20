@@ -23,19 +23,15 @@ axios.interceptors.response.use(
   },
   async function (error) {
     const msgStore = useMessagesStore();
-    switch (error.response.status) {
-      case 500:
-        msgStore.setErrorMessage(
-          "Impossible de se connecter au serveur. Veuillez réessayer."
-        );
-        break;
-      case 401:
-        msgStore.setErrorMessage("Non autorisé.");
-        break;
-      case 406:
-        msgStore.setErrorMessage(Object.values(error.response.data).join(", "));
-        break;
-      default:
+    let status = error.response.status;
+    if (status >= 500) {
+      msgStore.setErrorMessage(
+        "Impossible de se connecter au serveur. Veuillez réessayer."
+      );
+    } else if (status === 401) {
+      msgStore.setErrorMessage("Non autorisé.");
+    } else if (status === 406) {
+      msgStore.setErrorMessage(Object.values(error.response.data).join(", "));
     }
     return Promise.reject(error);
   }
