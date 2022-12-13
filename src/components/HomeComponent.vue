@@ -1,7 +1,11 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <h1>Bienvenue</h1>
-  <img src="../assets/img/medical.jpg" alt="">
+  <div class="row justify-content-center">
+    <div class="col-sm-10 col-md-8 col-lg-6 text-center">
+      <h1 class="py-3">Bienvenue</h1>
+      <img class="rounded img-fluid shadow" src="../assets/img/medical.jpg" alt="">
+    </div>
+  </div>
 </template>
 
 <!-- eslint-disable prettier/prettier -->
@@ -12,22 +16,5 @@ export default {
 </script>
 
 <!-- eslint-disable prettier/prettier -->
-<style scoped>
-h1 {
-    position: relative;
-    width: 50%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0.5em 0;
-    opacity: 50%;
-    text-align: center;
-  }
-  img {
-    position: relative;
-    width: max(40vw, 20rem);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 99;
-    box-shadow: 10px 10px 12px rgba(0, 0, 0, 0.2);
-  }
+<style>
 </style>
