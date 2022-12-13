@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
       <div class="col-lg-8 col-xl-6 pb-5">
         <h1 class="fs-2 text-center py-3">S'enregistrer</h1>
-        <form @submit="submitSignUp" class="row g-3 needs-validation py-3" novalidate>
+        <form @submit.prevent="submitSignUp" class="row g-3 needs-validation py-3" novalidate>
           <div class="col-md-6">
             <label for="id" class="form-label">* Identifiant</label>
             <input style="text-transform: uppercase;" v-model.trim="user.id" type="text" class="form-control" id="id"
@@ -22,24 +22,24 @@
           </div>
           <div class="col-md-6">
             <label for="password" class="form-label">* Mot de passe</label>
-            <input @input="passwordRepeatError = false" v-model.trim="user.password" type="password"
+            <input @input="checkPasswordRepeat = false" v-model.trim="user.password" type="password"
               class="form-control" id="password" required minlength="4">
             <div class="invalid-feedback" :class="{ 'd-none': user.password.length > 0 }">
               Le mot de passe est obligatoire.
             </div>
-            <div class="invalid-feedback" :class="{ 'd-none': user.password.length == 0 }">
+            <div class="invalid-feedback" :class="{ 'd-none': user.password.length === 0 }">
               Le mot de passe doit comporter au moins 4 caractères.
             </div>
           </div>
           <div class="col-md-6">
             <label for="passwordRepeat" class="form-label">* Veuillez ressaisir le mot de passe</label>
-            <input @input="passwordRepeatError = false" v-model="passwordRepeat" type="password" class="form-control"
-              id="passwordRepeat" :pattern="passwordRepeatError ? user.password : '.*'" required>
-            <div class="invalid-feedback" :class="{ 'd-none': !passwordRepeatError || passwordRepeat.length === 0 }">
-              Le mot de passe resaissi doit être identique.
-            </div>
+            <input @input="checkPasswordRepeat = false" v-model="passwordRepeat" type="password" class="form-control"
+              id="passwordRepeat" :pattern="checkPasswordRepeat ? user.password : '.*'" required>
             <div class="invalid-feedback" :class="{ 'd-none': passwordRepeat.length > 0 }">
               Le mot de passe doit être resaissi.
+            </div>
+            <div class="invalid-feedback" :class="{ 'd-none': passwordRepeat.length === 0 }">
+              Le mot de passe resaissi doit être identique.
             </div>
           </div>
           <div class="col-md-6">
@@ -93,16 +93,15 @@ export default {
         securityCode: "",
       },
       passwordRepeat: "",
-      passwordRepeatError: false,
+      checkPasswordRepeat: false,
     };
   },
   methods: {
     async submitSignUp($event) {
-      $event.preventDefault();
       let form = $event.target;
       form.classList.add('was-validated');
-      this.passwordRepeatError = this.passwordRepeat !== this.user.password;
-      if (form.checkValidity() && !this.passwordRepeatError) {
+      this.checkPasswordRepeat = true;
+      if (form.checkValidity() && this.user.password === this.passwordRepeat) {
         try {
           await Service.signUp(this.user);
           this.setSuccessMessage("Le compte a bien été créé. Veuillez vous connecter.");
