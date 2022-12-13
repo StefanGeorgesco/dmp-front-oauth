@@ -1,81 +1,83 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <header>
-    <h1>Dossier médical partagé</h1>
-    <nav class="navbar navbar-expand-lg bg-light">
-      <div class="container">
-        <button ref="navbarToggler" class="navbar-toggler" type="button" data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-          aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div @click="foldMenu" class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item" v-show="isAuthenticated">
-              <RouterLink class="nav-link" to="/main">
-                <i class="fa-solid fa-house"></i>
-              </RouterLink>
+  <nav class="navbar navbar-expand-sm bg-light shadow-sm fixed-top">
+    <div class="container-fluid">
+      <RouterLink class="navbar-brand" to="/">Dmp</RouterLink>
+      <button ref="navbarToggler" class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div @click="foldMenu" class="collapse navbar-collapse" id="navbarMenu">
+        <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+          <li class="nav-item" v-show="isAuthenticated">
+            <RouterLink class="nav-link" to="/main">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-house"
+                viewBox="0 0 16 16">
+                <path
+                  d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z" />
+              </svg>
+            </RouterLink>
+          </li>
+          <li v-show="isAuthenticated && role === 'ADMIN'" class="nav-item">
+            <RouterLink class="nav-link" to="/manage-doctors">
+              Médecins
+            </RouterLink>
+          </li>
+          <li v-show="isAuthenticated && role === 'ADMIN'" class="nav-item">
+            <RouterLink class="nav-link" to="/manage-patient-files">
+              Patients
+            </RouterLink>
+          </li>
+          <li v-show="!isAuthenticated" class="nav-item">
+            <a class="nav-link" href="/" @click.prevent="login">Login</a>
+          </li>
+          <li v-show="!isAuthenticated" class="nav-item">
+            <RouterLink class="nav-link" to="/sign-up">
+              S'enregistrer
+            </RouterLink>
+          </li>
+        </ul>
+        <div v-show="isAuthenticated" class="dropdown">
+          <a class="btn btn-outline-secondary dropdown-toggle d-inline-flex align-items-center gap-1" href=""
+            role="button" data-bs-toggle="dropdown" @click.stop aria-expanded="false">
+            {{ username }}
+            <span class="vr"></span>
+            {{ roles[role] }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-sm-end">
+            <li v-show="role !== 'ADMIN'">
+              <RouterLink class="dropdown-item" to="/personal-data">
+                Données personnelles</RouterLink>
             </li>
-            <li v-show="isAuthenticated && role === 'ADMIN'" class="nav-item">
-              <RouterLink class="nav-link" to="/manage-doctors">
-                Médecins
-              </RouterLink>
+            <li v-show="role !== 'ADMIN'">
+              <hr class="dropdown-divider" />
             </li>
-            <li v-show="isAuthenticated && role === 'ADMIN'" class="nav-item">
-              <RouterLink class="nav-link" to="/manage-patient-files">
-                Patients
-              </RouterLink>
-            </li>
-            <li v-show="isAuthenticated" class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" @click.stop
-                aria-expanded="false">
-                {{ username }}
-              </a>
-              <ul class="dropdown-menu">
-                <li v-show="role !== 'ADMIN'">
-                  <RouterLink class="dropdown-item" to="/personal-data">
-                    Données personnelles</RouterLink>
-                </li>
-                <li v-show="role !== 'ADMIN'">
-                  <hr class="dropdown-divider" />
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/" @click.prevent="logout">Déconnexion</a>
-                </li>
-              </ul>
-            </li>
-            <li v-if="isAuthenticated" class="nav-item">
-              <i class="nav-link">{{ roles[role] }}</i>
-            </li>
-            <li v-show="!isAuthenticated" class="nav-item">
-              <a class="nav-link" href="/" @click.prevent="login">Login</a>
-            </li>
-            <li v-show="!isAuthenticated" class="nav-item">
-              <RouterLink class="nav-link" to="/sign-up">
-                S'enregistrer
-              </RouterLink>
+            <li>
+              <a class="dropdown-item" href="/" @click.prevent="logout">Déconnexion</a>
             </li>
           </ul>
         </div>
       </div>
-      <div class="container">
-        <transition name="errorMessageTransition">
-          <div v-show="showErrorMessage" class="alert alert-danger" role="alert">
-            {{ errorMessage }}
-          </div>
-        </transition>
-        <transition name="successMessageTransition">
-          <div v-show="showSuccessMessage" class="alert alert-success" role="alert">
-            {{ successMessage }}
-          </div>
-        </transition>
+    </div>
+  </nav>
+  <div class="position-fixed top-0 start-50 translate-middle-x mt-2" style="z-index: 5000;">
+    <transition name="errorMessageTransition">
+      <div v-show="showErrorMessage" class="alert alert-danger py-2" role="alert">
+        {{ errorMessage }}
       </div>
-    </nav>
-  </header>
-  <div v-if="loading" class="spinner-border" role="status">
-    <span class="visually-hidden">Loading...</span>
+    </transition>
+    <transition name="successMessageTransition">
+      <div v-show="showSuccessMessage" class="alert alert-success py-2" role="alert">
+        {{ successMessage }}
+      </div>
+    </transition>
   </div>
-  <main class="main-section">
+  <div v-show="loading" class="position-fixed top-50 start-50 translate-middle">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <main class="container-fluid pt-3" style="margin-top: 3.5rem;">
     <RouterView />
   </main>
 </template>
@@ -124,7 +126,8 @@ export default {
   },
   methods: {
     foldMenu() {
-      this.$refs.navbarToggler.click();
+      if (!this.$refs.navbarToggler.classList.contains("collapsed"))
+        this.$refs.navbarToggler.click();
     },
     ...mapActions(useAuthUserStore, ["initAuth", "login", "logout"]),
   },
@@ -132,60 +135,7 @@ export default {
 </script>
 
 <!-- eslint-disable prettier/prettier -->
-<style scoped>
-.spinner-border {
-  position: fixed;
-  top: calc(50% - 1.5rem);
-  left: calc(50% - 1.5rem);
-  z-index: 2;
-}
-header {
-  position: fixed;
-  top: 0;
-  z-index: 1;
-  width: 100%;
-  background-color: white;
-  margin: 0;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
-}
-
-header > * {
-  margin: 0;
-}
-
-header > nav {
-  height: 3.5em;
-}
-
-header > h1 {
-  padding: 0.5rem;
-}
-
-.main-section {
-  padding: 1rem 0;
-  margin: 7rem 0 0;
-  box-sizing: border-box;
-}
-
-.collapse.navbar-collapse {
-  background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity));
-  padding-left: 1em;
-}
-
-.dropdown-menu {
-  z-index: 2;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
-}
-
-.alert {
-  padding: 0.25rem 0.5rem;
-  position: absolute;
-  top: 0.45rem;
-  bottom: auto;
-  left: 27%;
-  z-index: 2;
-}
-
+<style>
 .errorMessageTransition-enter-from,
 .successMessageTransition-enter-from,
 .errorMessageTransition-leave-to,
