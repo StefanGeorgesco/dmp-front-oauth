@@ -3,11 +3,11 @@
   <nav class="navbar navbar-expand-sm bg-light shadow-sm fixed-top">
     <div class="container-fluid">
       <RouterLink class="navbar-brand" to="/">Dmp</RouterLink>
-      <button ref="navbarToggler" class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      <button ref="navbarTogglerRef" class="navbar-toggler" type="button" data-bs-toggle="collapse"
         data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle Menu">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div @click="foldMenu" class="collapse navbar-collapse" id="navbarMenu">
+      <div ref="navbarMenuRef" @click="foldMenu" class="collapse navbar-collapse" id="navbarMenu">
         <ul class="navbar-nav me-auto mb-2 mb-sm-0">
           <li class="nav-item" v-show="isAuthenticated">
             <RouterLink class="nav-link" to="/main">
@@ -77,7 +77,7 @@
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-  <main class="container-fluid pt-3" style="margin-top: 3.5rem;">
+  <main @click="foldMenu" class="container-fluid pt-3" style="margin-top: 3.5rem;">
     <RouterView />
   </main>
 </template>
@@ -111,6 +111,7 @@ export default {
   },
   watch: {
     $route() {
+      this.foldMenu();
       this.state++;
     },
   },
@@ -126,8 +127,8 @@ export default {
   },
   methods: {
     foldMenu() {
-      if (!this.$refs.navbarToggler.classList.contains("collapsed"))
-        this.$refs.navbarToggler.click();
+      if (this.$refs.navbarMenuRef.classList.contains("show"))
+        this.$refs.navbarTogglerRef.click();
     },
     ...mapActions(useAuthUserStore, ["initAuth", "login", "logout"]),
   },
