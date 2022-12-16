@@ -8,49 +8,49 @@
         </div>
         <form @submit.prevent="submitUpdateFile" @input="editing = true;" class="row mb-3 g-2 pt-3 needs-validation"
           novalidate autocomplete="off">
-          <label for="id" class="col-md-4 col-form-label col-form-label-sm fw-semibold fw-semibold">Identifiant</label>
+          <label for="id" class="col-md-4 col-form-label fw-semibold fw-semibold">Identifiant</label>
           <div class="col-md-8">
-            <input v-model="file.id" type="text" class="form-control-plaintext form-control-sm user-select-none" id="id">
+            <input v-model="file.id" type="text" class="form-control-plaintext user-select-none" id="id">
           </div>
-          <label for="first_name" class="col-md-4 col-form-label col-form-label-sm fw-semibold">Prénom</label>
+          <label for="first_name" class="col-md-4 col-form-label fw-semibold">Prénom</label>
           <div class="col-md-8">
-            <input v-model="file.firstname" type="text" class="form-control-plaintext form-control-sm" id="first_name">
+            <input v-model="file.firstname" type="text" class="form-control-plaintext" id="first_name">
           </div>
-          <label for="last_name" class="col-md-4 col-form-label col-form-label-sm fw-semibold">Nom</label>
+          <label for="last_name" class="col-md-4 col-form-label fw-semibold">Nom</label>
           <div class="col-md-8">
-            <input v-model="file.lastname" type="text" class="form-control-plaintext form-control-sm" id="last_name">
+            <input v-model="file.lastname" type="text" class="form-control-plaintext" id="last_name">
           </div>
           <template v-if="role === 'PATIENT'">
-            <label for="date_of_birth" class="col-md-4 col-form-label col-form-label-sm fw-semibold">Date de naissance</label>
+            <label for="date_of_birth" class="col-md-4 col-form-label fw-semibold">Date de naissance</label>
             <div class="col-md-8">
-              <input v-model="file.dateOfBirth" type="date" class="form-control-plaintext form-control-sm user-select-none"
+              <input v-model="file.dateOfBirth" type="date" class="form-control-plaintext user-select-none"
                 id="date_of_birth" disabled>
             </div>
           </template>
           <template v-if="role === 'DOCTOR'">
-            <label for="specialty_list" class="col-md-4 col-form-label col-form-label-sm fw-semibold">Spécialités</label>
+            <label for="specialty_list" class="col-md-4 col-form-label fw-semibold">Spécialités</label>
             <div class="col-md-8">
-              <input type="text" class="form-control-plaintext form-control-sm text-truncate" id="specialty_list"
+              <input type="text" class="form-control-plaintext text-truncate" id="specialty_list"
                 :value="file.specialties.map((s) => `${s.id} - ${s.description}`).join(', ')">
             </div>
           </template>
-          <label for="phone" class="col-md-4 col-form-label col-form-label-sm fw-semibold">
+          <label for="phone" class="col-md-4 col-form-label fw-semibold">
             <span :class="{ 'd-none': !update }">*</span>
             Numéro de téléphone
           </label>
           <div class="col-md-8">
-            <input v-model.trim="file.phone" type="text" class="form-control-sm"
+            <input v-model.trim="file.phone" type="text"
               :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="phone" required>
             <div class="invalid-feedback">
               Le numéro de téléphone est obligatoire.
             </div>
           </div>
-          <label for="email" class="col-md-4 col-form-label col-form-label-sm fw-semibold">
+          <label for="email" class="col-md-4 col-form-label fw-semibold">
             <span :class="{ 'd-none': !update }">*</span>
             Adresse e-mail
           </label>
           <div class="col-md-8">
-            <input v-model="file.email" type="email" class="form-control-sm"
+            <input v-model="file.email" type="email"
               :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="email" required>
             <div class="invalid-feedback">
               <span :class="{ 'd-none': file.email.length > 0 }">L'adresse email est obligatoire.</span>
@@ -59,58 +59,58 @@
           </div>
           <h2 class="h5 pt-3 pb-1 mb-0">Adresse</h2>
           <div class="col-md-4"></div>
-          <AddressPicker class="form-control-sm col-md-8 px-1" v-show="update" @new-selection="fillAddress" :error-message-service="setErrorMessage"
+          <AddressPicker class="col-md-8 px-1" v-show="update" @new-selection="fillAddress" :error-message-service="setErrorMessage"
             :set-loader-service="setLoader" :clear-loader-service="clearLoader" />
           <div class="w-100 m-0"></div>
-          <label for="street1" class="col-md-4 col-form-label col-form-label-sm fw-semibold">
+          <label for="street1" class="col-md-4 col-form-label fw-semibold">
             <span :class="{ 'd-none': !update }">*</span>
             Numéro et voie
           </label>
           <div class="col-md-8">
-            <input v-model.trim="file.address.street1" type="text" class="form-control-sm"
+            <input v-model.trim="file.address.street1" type="text"
               :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="street1" required>
             <div class="invalid-feedback">
               La voie est obligatoire.
             </div>
           </div>
-          <label for="street2" class="col-md-4 col-form-label col-form-label-sm fw-semibold">Complément d'adresse</label>
+          <label for="street2" class="col-md-4 col-form-label fw-semibold">Complément d'adresse</label>
           <div class="col-md-8">
-            <input v-model.trim="file.address.street2" type="text" class="form-control-sm"
+            <input v-model.trim="file.address.street2" type="text"
               :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="street2">
           </div>
-          <label for="city" class="col-md-4 col-form-label col-form-label-sm fw-semibold">
+          <label for="city" class="col-md-4 col-form-label fw-semibold">
             <span :class="{ 'd-none': !update }">*</span>
             Commune
           </label>
           <div class="col-md-8">
-            <input v-model.trim="file.address.city" type="text" class="form-control-sm"
+            <input v-model.trim="file.address.city" type="text"
               :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="city" required>
             <div class="invalid-feedback">
               La commune est obligatoire.
             </div>
           </div>
-          <label for="state" class="col-md-4 col-form-label col-form-label-sm fw-semibold">Etat ou région</label>
+          <label for="state" class="col-md-4 col-form-label fw-semibold">Etat ou région</label>
           <div class="col-md-8">
-            <input v-model.trim="file.address.state" type="text" class="form-control-sm"
+            <input v-model.trim="file.address.state" type="text"
               :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="state">
           </div>
-          <label for="zip_code" class="col-md-4 col-form-label col-form-label-sm fw-semibold">
+          <label for="zip_code" class="col-md-4 col-form-label fw-semibold">
             <span :class="{ 'd-none': !update }">*</span>
             Code postal
           </label>
           <div class="col-md-8">
-            <input v-model.trim="file.address.zipcode" type="text" class="form-control-sm"
+            <input v-model.trim="file.address.zipcode" type="text"
               :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="zip_code" required>
             <div class="invalid-feedback">
               Le code postal est obligatoire.
             </div>
           </div>
-          <label for="country" class="col-md-4 col-form-label col-form-label-sm fw-semibold">
+          <label for="country" class="col-md-4 col-form-label fw-semibold">
             <span :class="{ 'd-none': !update }">*</span>
             Pays
           </label>
           <div class="col-md-8">
-            <input v-model.trim="file.address.country" type="text" class="form-control-sm"
+            <input v-model.trim="file.address.country" type="text"
               :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="country" required>
             <div class="invalid-feedback">
               Le pays est obligatoire.
@@ -119,7 +119,7 @@
           <div class="row justify-content-md-center">
             <div class="col-sm-6 col-md-4 g-0">
               <div class="vstack gap-2 mt-4">
-                <button v-if="update" class="btn btn-sm btn-primary d-flex align-items-center justify-content-center"
+                <button v-if="update" class="btn btn-primary d-flex align-items-center justify-content-center"
                   type="submit">
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                     class="bi bi-check pe-1" viewBox="0 0 16 16">
@@ -131,7 +131,7 @@
                   </span>
                 </button>
                 <a v-if="update" role="button" @click="init"
-                  class="btn btn-sm btn-secondary d-flex align-items-center justify-content-center" type="button">
+                  class="btn btn-secondary d-flex align-items-center justify-content-center" type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                     class="bi bi-x pe-1" viewBox="0 0 16 16">
                     <path
@@ -142,13 +142,13 @@
                   </span>
                 </a>
                 <a v-if="!update" role="button" @click="updateStart"
-                  class="btn btn-sm btn-primary d-flex align-items-center justify-content-center">
+                  class="btn btn-primary d-flex align-items-center justify-content-center">
                   <span class="py-1">
                     Modifier
                   </span>
                 </a>
-                <a role="button" @click="$router.go(-1);"
-                  class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center">
+                <RouterLink to="/main"
+                  class="btn btn-outline-secondary d-flex align-items-center justify-content-center">
                   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                     class="bi bi-backspace pe-2" viewBox="0 0 16 16">
                     <path
@@ -157,7 +157,7 @@
                       d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z" />
                   </svg>
                   <span class="py-1">Retour</span>
-                </a>
+                </RouterLink>
               </div>
             </div>
           </div>
