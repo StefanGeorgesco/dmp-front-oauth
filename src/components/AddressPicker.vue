@@ -4,7 +4,8 @@
     <div class="position-relative" style="margin: 0; padding: 0;">
         <input v-bind="$attrs" @keyup.esc="clear" @blur="delayedClear" v-model="searchString" type="text"
             v-debounce:500ms="findAddresses" class="form-control" placeholder="Recherche...">
-        <div class="position-absolute top-100 start-0 mt-2 p-2 border rounded shadow bg-white" v-show="foundAddresses.length > 0">
+        <div class="position-absolute top-100 start-0 mt-2 p-2 border rounded shadow bg-white" style="z-index: 1000;"
+            v-show="foundAddresses.length > 0">
             <div class="option-item" v-for="address in foundAddresses" :key="address.properties.id"
                 @click="select(address)">
                 {{ address.properties.label }}

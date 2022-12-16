@@ -60,7 +60,7 @@
       </div>
     </div>
   </nav>
-  <div class="position-fixed top-0 start-50 translate-middle-x mt-2" style="z-index: 5000;">
+  <div class="position-fixed top-0 start-50 translate-middle-x mt-2" style="z-index: 1040;">
     <transition name="errorMessageTransition">
       <div v-show="showErrorMessage" class="alert alert-danger py-2" role="alert">
         {{ errorMessage }}
@@ -72,7 +72,7 @@
       </div>
     </transition>
   </div>
-  <div v-show="loading" class="position-fixed top-50 start-50 translate-middle">
+  <div v-show="loading" class="position-fixed top-50 start-50 translate-middle" style="z-index: 1100;">
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
