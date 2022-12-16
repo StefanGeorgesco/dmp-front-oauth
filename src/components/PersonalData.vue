@@ -10,28 +10,28 @@
           novalidate autocomplete="off">
           <label for="id" class="col-md-4 col-form-label fw-semibold fw-semibold">Identifiant</label>
           <div class="col-md-8">
-            <input v-model="file.id" type="text" class="form-control-plaintext user-select-none" id="id">
+            <input v-model="file.id" type="text" class="form-control-plaintext user-select-none" id="id" readonly>
           </div>
           <label for="first_name" class="col-md-4 col-form-label fw-semibold">Prénom</label>
           <div class="col-md-8">
-            <input v-model="file.firstname" type="text" class="form-control-plaintext" id="first_name">
+            <input v-model="file.firstname" type="text" class="form-control-plaintext" id="first_name" readonly>
           </div>
           <label for="last_name" class="col-md-4 col-form-label fw-semibold">Nom</label>
           <div class="col-md-8">
-            <input v-model="file.lastname" type="text" class="form-control-plaintext" id="last_name">
+            <input v-model="file.lastname" type="text" class="form-control-plaintext" id="last_name" readonly>
           </div>
           <template v-if="role === 'PATIENT'">
             <label for="date_of_birth" class="col-md-4 col-form-label fw-semibold">Date de naissance</label>
             <div class="col-md-8">
               <input v-model="file.dateOfBirth" type="date" class="form-control-plaintext user-select-none"
-                id="date_of_birth" disabled>
+                id="date_of_birth" readonly>
             </div>
           </template>
           <template v-if="role === 'DOCTOR'">
             <label for="specialty_list" class="col-md-4 col-form-label fw-semibold">Spécialités</label>
             <div class="col-md-8">
               <input type="text" class="form-control-plaintext text-truncate" id="specialty_list"
-                :value="file.specialties.map((s) => `${s.id} - ${s.description}`).join(', ')">
+                :value="file.specialties.map((s) => `${s.id} - ${s.description}`).join(', ')" readonly>
             </div>
           </template>
           <label for="phone" class="col-md-4 col-form-label fw-semibold">
@@ -40,7 +40,7 @@
           </label>
           <div class="col-md-8">
             <input v-model.trim="file.phone" type="text"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="phone" required>
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="phone" required :readonly="!update">
             <div class="invalid-feedback">
               Le numéro de téléphone est obligatoire.
             </div>
@@ -51,7 +51,7 @@
           </label>
           <div class="col-md-8">
             <input v-model="file.email" type="email"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="email" required>
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="email" required :readonly="!update">
             <div class="invalid-feedback">
               <span :class="{ 'd-none': file.email.length > 0 }">L'adresse email est obligatoire.</span>
               <span :class="{ 'd-none': file.email.length === 0 }">L'adresse email doit respecter le format.</span>
@@ -68,7 +68,7 @@
           </label>
           <div class="col-md-8">
             <input v-model.trim="file.address.street1" type="text"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="street1" required>
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="street1" required :readonly="!update">
             <div class="invalid-feedback">
               La voie est obligatoire.
             </div>
@@ -76,7 +76,7 @@
           <label for="street2" class="col-md-4 col-form-label fw-semibold">Complément d'adresse</label>
           <div class="col-md-8">
             <input v-model.trim="file.address.street2" type="text"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="street2">
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="street2" :readonly="!update">
           </div>
           <label for="city" class="col-md-4 col-form-label fw-semibold">
             <span :class="{ 'd-none': !update }">*</span>
@@ -84,7 +84,7 @@
           </label>
           <div class="col-md-8">
             <input v-model.trim="file.address.city" type="text"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="city" required>
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="city" required :readonly="!update">
             <div class="invalid-feedback">
               La commune est obligatoire.
             </div>
@@ -92,7 +92,7 @@
           <label for="state" class="col-md-4 col-form-label fw-semibold">Etat ou région</label>
           <div class="col-md-8">
             <input v-model.trim="file.address.state" type="text"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="state">
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="state" :readonly="!update">
           </div>
           <label for="zip_code" class="col-md-4 col-form-label fw-semibold">
             <span :class="{ 'd-none': !update }">*</span>
@@ -100,7 +100,7 @@
           </label>
           <div class="col-md-8">
             <input v-model.trim="file.address.zipcode" type="text"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="zip_code" required>
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="zip_code" required :readonly="!update">
             <div class="invalid-feedback">
               Le code postal est obligatoire.
             </div>
@@ -111,7 +111,7 @@
           </label>
           <div class="col-md-8">
             <input v-model.trim="file.address.country" type="text"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="country" required>
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="country" required :readonly="!update">
             <div class="invalid-feedback">
               Le pays est obligatoire.
             </div>
@@ -276,7 +276,7 @@ export default {
           this.file = response.data;
           this.update = false;
           this.editing = false;
-          this.moveUp();
+          nextTick(this.moveUp);
         } catch (error) {
           if (error.response.data?.message) {
             this.setErrorMessage(error.response.data.message);
