@@ -1,124 +1,170 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="container">
-    <h2>Données personnelles</h2>
-  </div>
-  <br>
-  <div class="container">
-    <form @submit.prevent="submitUpdateFile" @input="editing = true; checkForm()" class="row g-3 needs-validation"
-      novalidate>
-      <div class="col-md-4">
-        <label for="id" class="form-label">Identifiant</label>
-        <input v-model="file.id" type="text" class="form-control" id="id" readonly>
-      </div>
-      <div class="col-md-4">
-        <label for="prenom" class="form-label">Prénom</label>
-        <input v-model="file.firstname" type="text" class="form-control" id="prenom" readonly>
-      </div>
-      <div class="col-md-4">
-        <label for="nom" class="form-label">Nom</label>
-        <input v-model="file.lastname" type="text" class="form-control" id="nom" readonly>
-      </div>
-      <div></div>
-      <div v-if="role === 'PATIENT'" class="col-md-4">
-        <label for="date_de_naissance" class="form-label">Date de naissance</label>
-        <input v-model="file.dateOfBirth" type="date" class="form-control" id="date_de_naissance" readonly>
-      </div>
-      <div v-if="role === 'DOCTOR'" class="col-md-12">
-        <label class="form-label">Spécialités</label>
-        <div class="tag-container" style="margin: 0;">
-          <div class="tag" v-for="s in file.specialties" :key="s.id">
-            {{ s.id }} - {{ s.description }}
+  <div class="container pb-2">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <div class="row">
+          <h1 class="h2">Données personnelles</h1>
+        </div>
+        <form @submit.prevent="submitUpdateFile" @input="editing = true;" class="row mb-3 g-2 pt-3 needs-validation"
+          novalidate autocomplete="off">
+          <label for="id" class="col-md-4 col-form-label col-form-label-sm fw-semibold fw-semibold">Identifiant</label>
+          <div class="col-md-8">
+            <input v-model="file.id" type="text" class="form-control-plaintext form-control-sm user-select-none" id="id">
           </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <label for="telephone" class="form-label"><span :style="{ visibility: (update ? 'visible' : 'hidden') }">*
-          </span>Numéro de téléphone</label>
-        <input v-model.trim="file.phone" type="text" class="form-control" id="telephone" required :readonly="!update">
-        <div class="error" :class="{ fieldError: phoneError }">
-          Le numéro de téléphone est obligatoire.
-        </div>
-      </div>
-      <div class="col-md-4">
-        <label for="email" class="form-label"><span :style="{ visibility: (update ? 'visible' : 'hidden') }">*
-          </span>Adresse e-mail</label>
-        <input v-model="file.email" type="mail" class="form-control" id="email" required :readonly="!update">
-        <div class="error" :class="{ fieldError: emailPresentError }">
-          L'adresse email est obligatoire.
-        </div>
-        <div class="error" :class="{ fieldError: emailFormatError }">
-          L'adresse email doit respecter le format.
-        </div>
-      </div>
-      <div></div>
-      <fieldset class="row g-3">
-        <legend>Adresse</legend>
-        <AddressPicker v-show="update" @new-selection="fillAddress" :error-message-service="setErrorMessage"
-          :set-loader-service="setLoader" :clear-loader-service="clearLoader" />
-        <div></div>
-        <div class=" col-md-4">
-          <label for="rue1" class="form-label"><span :style="{ visibility: (update ? 'visible' : 'hidden') }">*
-            </span>Numéro et voie</label>
-          <input v-model.trim="file.address.street1" type="text" class="form-control" id="rue1" required
-            :readonly="!update">
-          <div class="error" :class="{ fieldError: street1Error }">
-            La voie est obligatoire.
+          <label for="first_name" class="col-md-4 col-form-label col-form-label-sm fw-semibold">Prénom</label>
+          <div class="col-md-8">
+            <input v-model="file.firstname" type="text" class="form-control-plaintext form-control-sm" id="first_name">
           </div>
-        </div>
-        <div class="col-md-4">
-          <label for="rue2" class="form-label">Complément d'adresse</label>
-          <input v-model.trim="file.address.street2" type="text" class="form-control" id="rue2" :readonly="!update">
-        </div>
-        <div class="col-md-4">
-          <label for="commune" class="form-label"><span :style="{ visibility: (update ? 'visible' : 'hidden') }">*
-            </span>Commune</label>
-          <input v-model.trim="file.address.city" type="text" class="form-control" id="commune" required
-            :readonly="!update">
-          <div class="error" :class="{ fieldError: cityError }">
-            La commune est obligatoire.
+          <label for="last_name" class="col-md-4 col-form-label col-form-label-sm fw-semibold">Nom</label>
+          <div class="col-md-8">
+            <input v-model="file.lastname" type="text" class="form-control-plaintext form-control-sm" id="last_name">
           </div>
-        </div>
-        <div class="col-md-4">
-          <label for="etat" class="form-label">Etat ou région</label>
-          <input v-model.trim="file.address.state" type="text" class="form-control" id="etat" :readonly="!update">
-        </div>
-        <div class="col-md-4">
-          <label for="code_postal" class="form-label"><span :style="{ visibility: (update ? 'visible' : 'hidden') }">*
-            </span>Code postal</label>
-          <input v-model.trim="file.address.zipcode" type="text" class="form-control" id="code_postal" required
-            :readonly="!update">
-          <div class="error" :class="{ fieldError: zipcodeError }">
-            Le code postal est obligatoire.
+          <template v-if="role === 'PATIENT'">
+            <label for="date_of_birth" class="col-md-4 col-form-label col-form-label-sm fw-semibold">Date de naissance</label>
+            <div class="col-md-8">
+              <input v-model="file.dateOfBirth" type="date" class="form-control-plaintext form-control-sm user-select-none"
+                id="date_of_birth" disabled>
+            </div>
+          </template>
+          <template v-if="role === 'DOCTOR'">
+            <label for="specialty_list" class="col-md-4 col-form-label col-form-label-sm fw-semibold">Spécialités</label>
+            <div class="col-md-8">
+              <input type="text" class="form-control-plaintext form-control-sm text-truncate" id="specialty_list"
+                :value="file.specialties.map((s) => `${s.id} - ${s.description}`).join(', ')">
+            </div>
+          </template>
+          <label for="phone" class="col-md-4 col-form-label col-form-label-sm fw-semibold">
+            <span :class="{ 'd-none': !update }">*</span>
+            Numéro de téléphone
+          </label>
+          <div class="col-md-8">
+            <input v-model.trim="file.phone" type="text" class="form-control-sm"
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="phone" required>
+            <div class="invalid-feedback">
+              Le numéro de téléphone est obligatoire.
+            </div>
           </div>
-        </div>
-        <div class="col-md-4">
-          <label for="pays" class="form-label"><span :style="{ visibility: (update ? 'visible' : 'hidden') }">*
-            </span>Pays</label>
-          <input v-model.trim="file.address.country" type="text" class="form-control" id="pays" required
-            :readonly="!update">
-          <div class="error" :class="{ fieldError: countryError }">
-            Le pays est obligatoire.
+          <label for="email" class="col-md-4 col-form-label col-form-label-sm fw-semibold">
+            <span :class="{ 'd-none': !update }">*</span>
+            Adresse e-mail
+          </label>
+          <div class="col-md-8">
+            <input v-model="file.email" type="email" class="form-control-sm"
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="email" required>
+            <div class="invalid-feedback">
+              <span :class="{ 'd-none': file.email.length > 0 }">L'adresse email est obligatoire.</span>
+              <span :class="{ 'd-none': file.email.length === 0 }">L'adresse email doit respecter le format.</span>
+            </div>
           </div>
-        </div>
-      </fieldset>
-      <div v-if="update" class="col-12">
-        <button class="btn btn-primary" type="submit">Valider</button>
+          <h2 class="h5 pt-3 pb-1 mb-0">Adresse</h2>
+          <div class="col-md-4"></div>
+          <AddressPicker class="form-control-sm col-md-8 px-1" v-show="update" @new-selection="fillAddress" :error-message-service="setErrorMessage"
+            :set-loader-service="setLoader" :clear-loader-service="clearLoader" />
+          <div class="w-100 m-0"></div>
+          <label for="street1" class="col-md-4 col-form-label col-form-label-sm fw-semibold">
+            <span :class="{ 'd-none': !update }">*</span>
+            Numéro et voie
+          </label>
+          <div class="col-md-8">
+            <input v-model.trim="file.address.street1" type="text" class="form-control-sm"
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="street1" required>
+            <div class="invalid-feedback">
+              La voie est obligatoire.
+            </div>
+          </div>
+          <label for="street2" class="col-md-4 col-form-label col-form-label-sm fw-semibold">Complément d'adresse</label>
+          <div class="col-md-8">
+            <input v-model.trim="file.address.street2" type="text" class="form-control-sm"
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="street2">
+          </div>
+          <label for="city" class="col-md-4 col-form-label col-form-label-sm fw-semibold">
+            <span :class="{ 'd-none': !update }">*</span>
+            Commune
+          </label>
+          <div class="col-md-8">
+            <input v-model.trim="file.address.city" type="text" class="form-control-sm"
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="city" required>
+            <div class="invalid-feedback">
+              La commune est obligatoire.
+            </div>
+          </div>
+          <label for="state" class="col-md-4 col-form-label col-form-label-sm fw-semibold">Etat ou région</label>
+          <div class="col-md-8">
+            <input v-model.trim="file.address.state" type="text" class="form-control-sm"
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="state">
+          </div>
+          <label for="zip_code" class="col-md-4 col-form-label col-form-label-sm fw-semibold">
+            <span :class="{ 'd-none': !update }">*</span>
+            Code postal
+          </label>
+          <div class="col-md-8">
+            <input v-model.trim="file.address.zipcode" type="text" class="form-control-sm"
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="zip_code" required>
+            <div class="invalid-feedback">
+              Le code postal est obligatoire.
+            </div>
+          </div>
+          <label for="country" class="col-md-4 col-form-label col-form-label-sm fw-semibold">
+            <span :class="{ 'd-none': !update }">*</span>
+            Pays
+          </label>
+          <div class="col-md-8">
+            <input v-model.trim="file.address.country" type="text" class="form-control-sm"
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="country" required>
+            <div class="invalid-feedback">
+              Le pays est obligatoire.
+            </div>
+          </div>
+          <div class="row justify-content-md-center">
+            <div class="col-sm-6 col-md-4 g-0">
+              <div class="vstack gap-2 mt-4">
+                <button v-if="update" class="btn btn-sm btn-primary d-flex align-items-center justify-content-center"
+                  type="submit">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                    class="bi bi-check pe-1" viewBox="0 0 16 16">
+                    <path
+                      d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+                  </svg>
+                  <span class="py-1">
+                    Valider
+                  </span>
+                </button>
+                <a v-if="update" role="button" @click="init"
+                  class="btn btn-sm btn-secondary d-flex align-items-center justify-content-center" type="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                    class="bi bi-x pe-1" viewBox="0 0 16 16">
+                    <path
+                      d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                  </svg>
+                  <span class="py-1">
+                    Annuler
+                  </span>
+                </a>
+                <a v-if="!update" role="button" @click="updateStart"
+                  class="btn btn-sm btn-primary d-flex align-items-center justify-content-center">
+                  <span class="py-1">
+                    Modifier
+                  </span>
+                </a>
+                <a role="button" @click="$router.go(-1);"
+                  class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                    class="bi bi-backspace pe-2" viewBox="0 0 16 16">
+                    <path
+                      d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z" />
+                    <path
+                      d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z" />
+                  </svg>
+                  <span class="py-1">Retour</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
-    </form>
-    <br>
-    <div v-if="update" class="col-12">
-      <button @click="getFile" class="btn btn-light" type="button"><i class="fa-solid fa-xmark"></i> Annuler</button>
     </div>
-    <div v-if="!update" class="col-12">
-      <button @click="update = true" class="btn btn-primary" type="button">Modifier</button>
-    </div>
-    <br>
-    <div class="col-12">
-      <button @click="$router.go(-1);" type="button" class="btn btn-light">
-        <i class="fa-solid fa-right-from-bracket"></i> Retour</button>
-    </div>
-    <br>
+
   </div>
 </template>
 
@@ -158,18 +204,10 @@ export default {
           country: "",
         },
       },
-      mustCheck: false,
-      phoneError: false,
-      emailPresentError: false,
-      emailFormatError: false,
-      street1Error: false,
-      cityError: false,
-      zipcodeError: false,
-      countryError: false,
     };
   },
   async created() {
-    this.getFile();
+    this.init();
   },
   beforeRouteLeave(to) {
     if (to.name !== "login" && this.editing) {
@@ -182,7 +220,10 @@ export default {
     ...mapState(useAuthUserStore, ["role"]),
   },
   methods: {
-    async getFile() {
+    moveUp() {
+      document.querySelector("h1").scrollIntoView(false);
+    },
+    async init() {
       let getService;
       if (this.role === "DOCTOR") {
         getService = Service.getDoctorDetails;
@@ -192,45 +233,36 @@ export default {
       try {
         let response = await getService();
         this.file = response.data;
-        this.checkForm();
         this.update = false;
         this.editing = false;
-        this.mustCheck = false;
+        nextTick(() => {
+          document.querySelector("form").classList.remove("was-validated");
+          this.moveUp();
+        });
       } catch (error) {
         if (error.response.data) {
           this.setErrorMessage(error.response.data.message);
         }
       }
     },
+    updateStart() {
+      this.update = true;
+      nextTick(() => {
+        document.querySelector("form").classList.remove("was-validated");
+        this.moveUp();
+      });
+    },
     fillAddress(address) {
       this.file.address = address;
-      this.checkForm();
     },
-    checkForm() {
-      if (this.mustCheck) {
-        this.phoneError = !this.file.phone;
-        this.emailPresentError = !this.file.email;
-        this.emailFormatError = this.file.email && !new RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, 'g').test(this.file.email);
-        this.street1Error = !this.file.address.street1;
-        this.cityError = !this.file.address.city;
-        this.zipcodeError = !this.file.address.zipcode;
-        this.countryError = !this.file.address.country;
-
+    async submitUpdateFile($event) {
+      if (!this.editing) {
+        this.setSuccessMessage("Données inchangées.");
+        this.moveUp();
+        return;
       }
-
-      return (
-        !this.phoneError &&
-        !this.emailPresentError &&
-        !this.emailFormatError &&
-        !this.street1Error &&
-        !this.cityError &&
-        !this.zipcodeError &&
-        !this.countryError
-      );
-    },
-    async submitUpdateFile() {
-      this.mustCheck = true;
-      if (this.checkForm()) {
+      let form = $event.target;
+      if (form.checkValidity()) {
         let updateService;
         if (this.role === "DOCTOR") {
           updateService = Service.updateDoctorDetails;
@@ -244,6 +276,7 @@ export default {
           this.file = response.data;
           this.update = false;
           this.editing = false;
+          this.moveUp();
         } catch (error) {
           if (error.response.data?.message) {
             this.setErrorMessage(error.response.data.message);
@@ -252,8 +285,13 @@ export default {
           this.clearLoader(id);
         }
       } else {
+        form.classList.add("was-validated");
         this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
-        nextTick(() => { document.querySelector(".fieldError")?.scrollIntoView(false); });
+        nextTick(() => {
+          [...document.querySelectorAll(".invalid-feedback")].filter(
+            el => getComputedStyle(el, null).display === "block"
+          )[0]?.scrollIntoView(false);
+        });
       }
     },
     ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
@@ -264,7 +302,6 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style scoped>
-input[readonly],
 .tag-container {
   outline: none;
   border: none;
@@ -287,14 +324,5 @@ input[readonly],
   padding: 0.25em 1em;
   margin: 0.25em;
   color: white;
-}
-
-.error {
-  display: none;
-}
-
-.error.fieldError {
-  display: initial;
-  color: red;
 }
 </style>

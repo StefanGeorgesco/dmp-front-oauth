@@ -1,10 +1,10 @@
 <!-- eslint-disable prettier/prettier -->
 
 <template>
-    <div class="col-md-4 input-container">
-        <input @keyup.esc="clear" @blur="delayedClear" v-model="searchString" type="text"
+    <div class="position-relative" style="margin: 0; padding: 0;">
+        <input v-bind="$attrs" @keyup.esc="clear" @blur="delayedClear" v-model="searchString" type="text"
             v-debounce:500ms="findAddresses" class="form-control" placeholder="Recherche...">
-        <div class="options-list" v-show="foundAddresses.length > 0">
+        <div class="position-absolute top-100 start-0 mt-2 p-2 border rounded shadow bg-white" v-show="foundAddresses.length > 0">
             <div class="option-item" v-for="address in foundAddresses" :key="address.properties.id"
                 @click="select(address)">
                 {{ address.properties.label }}
@@ -111,26 +111,6 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style scoped>
-.input-container {
-    position: relative;
-}
-
-.options-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 99;
-    background-color: #ffffff;
-    border: 1px solid #ced4da;
-    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
-    padding: 0.25em 0 0.5em 0;
-}
-
-.option-item {
-    padding-left: 1em;
-}
-
 .option-item:hover {
     cursor: pointer;
     background-color: #eeeeee;
