@@ -7,7 +7,7 @@
         data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle Menu">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div ref="navbarMenuRef" @click="foldMenu" class="collapse navbar-collapse" id="navbarMenu">
+      <div ref="navbarMenuRef" class="collapse navbar-collapse" id="navbarMenu">
         <ul class="navbar-nav me-auto mb-2 mb-sm-0">
           <li class="nav-item" v-show="isAuthenticated">
             <RouterLink class="nav-link" to="/main">
@@ -77,7 +77,7 @@
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-  <main @click="foldMenu" class="container-fluid pt-3" style="margin-top: 3.5rem;">
+  <main class="container-fluid pt-3" style="margin-top: 3.5rem;">
     <RouterView />
   </main>
 </template>
@@ -108,6 +108,7 @@ export default {
   },
   created() {
     this.initAuth();
+    document.addEventListener("click", this.foldMenu);
   },
   watch: {
     $route() {
