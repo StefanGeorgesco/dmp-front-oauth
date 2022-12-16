@@ -131,7 +131,7 @@
                   </span>
                 </button>
                 <a v-if="update" role="button" @click="init"
-                  class="btn btn-secondary d-flex align-items-center justify-content-center" type="button">
+                  class="btn btn-secondary d-flex align-items-center justify-content-center">
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                     class="bi bi-x pe-1" viewBox="0 0 16 16">
                     <path
