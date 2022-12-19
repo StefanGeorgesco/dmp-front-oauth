@@ -1,9 +1,9 @@
 <!-- eslint-disable prettier/prettier -->
 
 <template>
-    <div class="position-relative" style="margin: 0; padding: 0;">
-        <input v-bind="$attrs" @keyup.esc="clear" @blur="delayedClear" v-model="searchString" type="text"
-            v-debounce:500ms="findAddresses" class="form-control" placeholder="Recherche...">
+    <div class="position-relative">
+        <input class="form-control" type="text" v-model="searchString" @keyup.esc="clear" @blur="delayedClear"
+            v-debounce:500ms="findAddresses" placeholder="Recherche...">
         <div class="position-absolute top-100 start-0 mt-2 p-2 border rounded shadow bg-white" style="z-index: 1000;"
             v-show="foundAddresses.length > 0">
             <div class="option-item" v-for="address in foundAddresses" :key="address.properties.id"
@@ -69,7 +69,7 @@ export default {
             setTimeout(this.clear, 200);
         },
         findAddresses() {
-            if (this.searchString) {
+            if (this.searchString.trim()) {
                 if (this.searchString.trim().length > 2) {
                     let url = encodeURI(`${baseUrl}?type=housenumber&lon=${this.longitude}&lat=${this.latitude}&limit=15&q=${this.searchString}`);
                     let id = this.setLoaderService();
@@ -78,14 +78,14 @@ export default {
                             if (response.ok) {
                                 return response.json();
                             } else {
-                                this.errorMessageService(`Le service d'adresse est injoignable (erreur ${response.status} '${response.statusText}').`);
+                                return Promise.reject(`erreur ${response.status}${response.statusText ? ": " + response.statusText : ""}`);
                             }
                         })
                         .then(data => {
                             this.foundAddresses = data.features;
                         })
                         .catch(error => {
-                            this.errorMessageService(`Le service d'adresse est injoignable ('${error.message}').`);
+                            this.errorMessageService(`Le service d'adresse est injoignable (${error}).`);
                         })
                         .finally(
                             () => { this.clearLoaderService(id); }
