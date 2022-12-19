@@ -2,7 +2,7 @@
 
 <template>
     <div class="position-relative">
-        <input class="form-control" type="text" v-model="searchString" @keyup.esc="clear" @blur="delayedClear"
+        <input type="text" v-model="searchString" @keyup.esc="clear" @blur="delayedClear"
             v-debounce:500ms="findAddresses" placeholder="Recherche...">
         <div class="position-absolute top-100 start-0 mt-2 p-2 border rounded shadow bg-white" style="z-index: 1000;"
             v-show="foundAddresses.length > 0">
@@ -112,6 +112,28 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style scoped>
+input {
+    display: block;
+    outline: none;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.375rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+input:focus {
+    outline: 2px solid lightgray;
+}
 .option-item:hover {
     cursor: pointer;
     background-color: #eeeeee;
