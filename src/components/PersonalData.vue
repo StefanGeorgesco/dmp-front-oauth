@@ -4,13 +4,13 @@
     <div class="row justify-content-center">
       <div class="col-md-10 col-lg-8">
         <div class="row">
-          <h1 class="h2">Données personnelles</h1>
+          <h1 id="top" class="h2">Données personnelles</h1>
         </div>
         <form @submit.prevent="submitUpdateFile" @input="editing = true;" class="row mb-3 g-2 pt-3 needs-validation"
           novalidate autocomplete="off">
-          <label for="id" class="col-md-4 col-form-label fw-semibold fw-semibold">Identifiant</label>
+          <label for="id" class="col-md-4 col-form-label fw-semibold">Identifiant</label>
           <div class="col-md-8">
-            <input v-model="file.id" type="text" class="form-control-plaintext user-select-none" id="id" readonly>
+            <input v-model="file.id" type="text" class="form-control-plaintext" id="id" readonly>
           </div>
           <label for="first_name" class="col-md-4 col-form-label fw-semibold">Prénom</label>
           <div class="col-md-8">
@@ -31,44 +31,48 @@
             <label for="specialty_list" class="col-md-4 col-form-label fw-semibold">Spécialités</label>
             <div class="col-md-8">
               <input type="text" class="form-control-plaintext text-truncate" id="specialty_list"
-                :value="file.specialties.map((s) => `${s.id} - ${s.description}`).join(', ')" readonly>
+                :value="file.specialties.map((s) => `${s.description}`).join(', ')" readonly>
             </div>
           </template>
           <label for="phone" class="col-md-4 col-form-label fw-semibold">
-            <span :class="{ 'd-none': !update }">*</span>
             Numéro de téléphone
+            <span v-show="update">*</span>
           </label>
           <div class="col-md-8">
             <input v-model.trim="file.phone" type="text"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="phone" required :readonly="!update">
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="phone" required
+              :readonly="!update">
             <div class="invalid-feedback">
               Le numéro de téléphone est obligatoire.
             </div>
           </div>
           <label for="email" class="col-md-4 col-form-label fw-semibold">
-            <span :class="{ 'd-none': !update }">*</span>
             Adresse e-mail
+            <span v-show="update">*</span>
           </label>
           <div class="col-md-8">
             <input v-model="file.email" type="email"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="email" required :readonly="!update">
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="email" required
+              :readonly="!update">
             <div class="invalid-feedback">
-              <span :class="{ 'd-none': file.email.length > 0 }">L'adresse email est obligatoire.</span>
-              <span :class="{ 'd-none': file.email.length === 0 }">L'adresse email doit respecter le format.</span>
+              <span v-show="file.email.length === 0">L'adresse email est obligatoire.</span>
+              <span v-show="file.email.length > 0">L'adresse email doit respecter le format.</span>
             </div>
           </div>
           <h2 class="h5 pt-3 pb-1 mb-0">Adresse</h2>
           <div class="col-md-4"></div>
-          <AddressPicker class="col-md-8 px-1" v-show="update" @new-selection="fillAddress" :error-message-service="setErrorMessage"
-            :set-loader-service="setLoader" :clear-loader-service="clearLoader" />
+          <AddressPicker class="col-md-8 mb-3" v-show="update" @new-selection="fillAddress"
+            :error-message-service="setErrorMessage" :set-loader-service="setLoader"
+            :clear-loader-service="clearLoader" />
           <div class="w-100 m-0"></div>
           <label for="street1" class="col-md-4 col-form-label fw-semibold">
-            <span :class="{ 'd-none': !update }">*</span>
             Numéro et voie
+            <span v-show="update">*</span>
           </label>
           <div class="col-md-8">
             <input v-model.trim="file.address.street1" type="text"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="street1" required :readonly="!update">
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="street1" required
+              :readonly="!update">
             <div class="invalid-feedback">
               La voie est obligatoire.
             </div>
@@ -79,12 +83,13 @@
               :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="street2" :readonly="!update">
           </div>
           <label for="city" class="col-md-4 col-form-label fw-semibold">
-            <span :class="{ 'd-none': !update }">*</span>
             Commune
+            <span v-show="update">*</span>
           </label>
           <div class="col-md-8">
             <input v-model.trim="file.address.city" type="text"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="city" required :readonly="!update">
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="city" required
+              :readonly="!update">
             <div class="invalid-feedback">
               La commune est obligatoire.
             </div>
@@ -95,23 +100,25 @@
               :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="state" :readonly="!update">
           </div>
           <label for="zip_code" class="col-md-4 col-form-label fw-semibold">
-            <span :class="{ 'd-none': !update }">*</span>
             Code postal
+            <span v-show="update">*</span>
           </label>
           <div class="col-md-8">
             <input v-model.trim="file.address.zipcode" type="text"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="zip_code" required :readonly="!update">
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="zip_code" required
+              :readonly="!update">
             <div class="invalid-feedback">
               Le code postal est obligatoire.
             </div>
           </div>
           <label for="country" class="col-md-4 col-form-label fw-semibold">
-            <span :class="{ 'd-none': !update }">*</span>
             Pays
+            <span v-show="update">*</span>
           </label>
           <div class="col-md-8">
             <input v-model.trim="file.address.country" type="text"
-              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="country" required :readonly="!update">
+              :class="{ 'form-control': update, 'form-control-plaintext': !update }" id="country" required
+              :readonly="!update">
             <div class="invalid-feedback">
               Le pays est obligatoire.
             </div>
@@ -119,44 +126,38 @@
           <div class="row justify-content-md-center">
             <div class="col-sm-6 col-md-4 g-0">
               <div class="vstack gap-2 mt-4">
-                <button v-if="update" class="btn btn-primary d-flex align-items-center justify-content-center"
+                <button v-if="update" class="btn btn-primary d-flex align-items-center justify-content-center py-2"
                   type="submit">
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
-                    class="bi bi-check pe-1" viewBox="0 0 16 16">
+                    class="bi bi-check me-1" viewBox="0 0 16 16">
                     <path
                       d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
                   </svg>
-                  <span class="py-1">
-                    Valider
-                  </span>
+                  Valider
                 </button>
                 <a v-if="update" role="button" @click="init"
-                  class="btn btn-secondary d-flex align-items-center justify-content-center">
+                  class="btn btn-secondary d-flex align-items-center justify-content-center py-2">
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
-                    class="bi bi-x pe-1" viewBox="0 0 16 16">
+                    class="bi bi-x me-1" viewBox="0 0 16 16">
                     <path
                       d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                   </svg>
-                  <span class="py-1">
-                    Annuler
-                  </span>
+                  Annuler
                 </a>
                 <a v-if="!update" role="button" @click="updateStart"
-                  class="btn btn-primary d-flex align-items-center justify-content-center">
-                  <span class="py-1">
-                    Modifier
-                  </span>
+                  class="btn btn-primary d-flex align-items-center justify-content-center" style="padding: 0.75rem 0;">
+                  Modifier
                 </a>
                 <RouterLink to="/main"
-                  class="btn btn-outline-secondary d-flex align-items-center justify-content-center">
+                  class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2">
                   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                    class="bi bi-backspace pe-2" viewBox="0 0 16 16">
+                    class="bi bi-backspace me-2" viewBox="0 0 16 16">
                     <path
                       d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z" />
                     <path
                       d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z" />
                   </svg>
-                  <span class="py-1">Retour</span>
+                  Retour
                 </RouterLink>
               </div>
             </div>
@@ -221,7 +222,7 @@ export default {
   },
   methods: {
     moveUp() {
-      document.querySelector("h1").scrollIntoView(false);
+      document.querySelector("#top").scrollIntoView(false);
     },
     async init() {
       let getService;
@@ -301,28 +302,4 @@ export default {
 </script>
 
 <!-- eslint-disable prettier/prettier -->
-<style scoped>
-.tag-container {
-  outline: none;
-  border: none;
-  background-color: #eeeeee;
-  border-radius: 0.375rem;
-}
-
-.tag-container {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0;
-  margin: 0;
-}
-
-.tag-container>.tag {
-  flex: 0 1 auto;
-  border-radius: 0.375rem;
-  background-color: gray;
-  padding: 0.25em 1em;
-  margin: 0.25em;
-  color: white;
-}
-</style>
+<style></style>
