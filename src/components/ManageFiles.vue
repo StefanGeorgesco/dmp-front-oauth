@@ -1,35 +1,54 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <div class="container">
-    <h2>Gérer les dossiers {{ type === "doctor" ? "des médecins" : "patients" }}</h2>
-  </div>
-  <br>
-  <div class="container">
-    <form class="row g-3">
-      <div class="col-md-4 input-container">
-        <input @keyup.esc="clear" v-model="searchString" type="text" @input="findFiles" class="form-control"
-          placeholder="Recherche...">
-        <div class="options-list" v-show="foundFiles.length > 0">
-          <div class="option-item" v-for="file in foundFiles" :key="file.id" @click="select(file)">
-            {{ file.id }} {{ file.firstname }} {{ file.lastname }}
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-5">
+        <div class="row text-center mt-3 py-1 mb-1">
+          <h2>Gérer les dossiers {{ type === "doctor" ? "des médecins" : "patients" }}</h2>
+        </div>
+        <div class="row position-relative justify-content-center g-3 py-1 my-1">
+          <input @keyup.esc="clear" @blur="delayedClear" v-model="searchString" type="text" @input="findFiles"
+            class="form-control" placeholder="Recherche...">
+          <div class="position-absolute top-100 start-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
+            v-show="foundFiles.length > 0">
+            <div class="option-item" v-for="file in foundFiles" :key="file.id" @click="select(file)">
+              {{ file.id }} {{ file.firstname }} {{ file.lastname }}
+            </div>
+          </div>
+        </div>
+        <div v-if="selectedFile" class="row py-1 my-1">
+          <FileCard @referring-doctor-updated="updateFile" @close="clear" @file-deleted="clear" :type="type"
+            :file="selectedFile">
+          </FileCard>
+        </div>
+        <div class="row justify-content-center mt-3 mb-3 py-1">
+          <div class="col-md-8">
+            <RouterLink to="/add-doctor" v-if="type === 'doctor' && role === 'ADMIN'"
+              class="btn btn-primary d-flex align-items-center justify-content-center py-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
+                <path
+                  d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+                <path
+                  d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+              </svg>
+              Ajouter un médecin
+            </RouterLink>
+            <RouterLink to="/add-patient-file" v-if="type === 'patientFile' && role === 'DOCTOR'"
+              class="btn btn-primary d-flex align-items-center justify-content-center py-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
+                <path
+                  d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+                <path
+                  d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+              </svg>
+              Ajouter un dossier patient
+            </RouterLink>
           </div>
         </div>
       </div>
-    </form>
-  </div>
-  <br>
-  <div v-if="selectedFile" class="container">
-    <FileCard @referring-doctor-updated="updateFile" @close="clear" @file-deleted="clear" :type="type"
-      :file="selectedFile">
-    </FileCard>
-  </div>
-  <div class="container">
-    <RouterLink to="/add-doctor" v-if="type === 'doctor' && role === 'ADMIN'" class="btn btn-primary">
-      <i class="fa-solid fa-plus"></i> Ajouter un médecin
-    </RouterLink>
-    <RouterLink to="/add-patient-file" v-if="type === 'patientFile' && role === 'DOCTOR'" class="btn btn-primary">
-      <i class="fa-solid fa-plus"></i> Ajouter un dossier patient
-    </RouterLink>
+    </div>
   </div>
 </template>
 
@@ -116,6 +135,12 @@ export default {
       this.foundFiles = [];
       this.selectedFile = null;
     },
+    delayedClear() {
+      setTimeout(() => {
+        this.searchString = "";
+        this.foundFiles = [];
+      }, 200);
+    },
     ...mapActions(useMessagesStore, ["setErrorMessage"]),
     ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
@@ -124,26 +149,6 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style>
-.input-container {
-  position: relative;
-}
-
-.options-list {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 99;
-  background-color: #ffffff;
-  border: 1px solid #ced4da;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
-  padding: 0.25em 0 0.5em 0;
-}
-
-.option-item {
-  padding-left: 1em;
-}
-
 .option-item:hover {
   cursor: pointer;
   background-color: #eeeeee;
