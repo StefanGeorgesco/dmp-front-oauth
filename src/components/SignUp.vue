@@ -36,11 +36,9 @@
               <label for="passwordRepeat" class="form-label">* Veuillez ressaisir le mot de passe</label>
               <input @input="checkPasswordRepeat = false" v-model="passwordRepeat" type="password" class="form-control"
                 id="passwordRepeat" :pattern="checkPasswordRepeat ? user.password : '.*'" required>
-              <div class="invalid-feedback" v-show="passwordRepeat.length === 0">
-                Le mot de passe doit être resaissi.
-              </div>
-              <div class="invalid-feedback" v-show="passwordRepeat.length > 0">
-                Le mot de passe resaissi doit être identique.
+              <div class="invalid-feedback">
+                <span v-show="passwordRepeat.length === 0">Le mot de passe doit être resaissi.</span>
+                <span v-show="passwordRepeat.length > 0">Le mot de passe resaissi doit être identique.</span>
               </div>
             </div>
             <div class="col-md-6">
@@ -107,7 +105,7 @@ export default {
       let form = $event.target;
       form.classList.add("was-validated");
       this.checkPasswordRepeat = true;
-      if (form.checkValidity() && this.user.password === this.passwordRepeat) {
+      if (form.checkValidity()) {
         try {
           await Service.signUp(this.user);
           this.setSuccessMessage("Le compte a bien été créé. Veuillez vous connecter.");
