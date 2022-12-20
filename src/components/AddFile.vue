@@ -1,139 +1,163 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div class="container">
-        <h2>Créer un dossier {{ type === "doctor" ? "de médecin" : "patient" }}</h2>
-    </div>
-    <br>
-    <div class="container" :hidden="created">
-        <form @submit.prevent="submitAddFile" @input="editing = true; checkForm()" class="row g-3 needs-validation"
-            novalidate>
-            <div class="col-md-4">
-                <label for="id" class="form-label">* Identifiant</label>
-                <input v-model.trim="file.id" type="text" class="form-control" id="id" required>
-                <div class="error" :class="{ fieldError: idError }">
-                    L'identifiant est obligatoire.
+        <div class="row mb-3">
+            <h2 id="top">Créer un dossier {{ type === "doctor" ? "de médecin" : "patient" }}</h2>
+        </div>
+        <form v-show="!created" @submit.prevent="submitAddFile" @input="editing = true" class="needs-validation"
+            novalidate autocomplete="off">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="id" class="form-label">* Identifiant</label>
+                    <input @input="file.id = file.id.toLocaleUpperCase();" v-model.trim="file.id" type="text" class="form-control"
+                        id="id" required>
+                    <div class="invalid-feedback">
+                        L'identifiant est obligatoire.
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="firstname" class="form-label">* Prénom</label>
+                    <input v-model.trim="file.firstname" type="text" class="form-control" id="firstname" required>
+                    <div class="invalid-feedback">
+                        Le prénom est obligatoire.
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="lastname" class="form-label">* Nom</label>
+                    <input v-model.trim="file.lastname" type="text" class="form-control" id="lastname" required>
+                    <div class="invalid-feedback">
+                        Le nom est obligatoire.
+                    </div>
+                </div>
+                <div v-if="type === 'doctor'" class="col-md-12">
+                    <label for="specialties_list" class="form-label">* Spécialités</label>
+                    <TagSelector @new-selection="updateSpecialtiesSelection" :options="specialties" />
+                    <input type="text" class="d-none" id="specialties_list" :value="file.specialties.join(', ')"
+                        required>
+                    <div class="invalid-feedback">
+                        Le médecin doit avoir au moins une spécialité.
+                    </div>
+                </div>
+                <div v-if="type === 'patientFile'" class="col-md-4">
+                    <label for="date_of_birth" class="form-label">* Date de naissance</label>
+                    <input @change="($event) => $event.target.blur()" v-model="file.dateOfBirth" type="date"
+                        class="form-control" id="date_of_birth" required :max="new Date().toISOString().split('T')[0]">
+                    <div class="invalid-feedback" v-show="!file.dateOfBirth">
+                        La date de naissance est obligatoire.
+                    </div>
+                    <div class="invalid-feedback" v-show="file.dateOfBirth">
+                        La date de naissance ne peut pas être dans le futur.
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="phone" class="form-label">* Numéro de téléphone</label>
+                    <input v-model.trim="file.phone" type="text" class="form-control" id="phone" required>
+                    <div class="invalid-feedback">
+                        Le numéro de téléphone est obligatoire.
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="email" class="form-label">* Adresse e-mail</label>
+                    <input v-model="file.email" type="email" class="form-control" id="email" required>
+                    <div class="invalid-feedback" v-show="file.email.length === 0">
+                        L'adresse email est obligatoire.
+                    </div>
+                    <div class="invalid-feedback" v-show="file.email.length > 0">
+                        L'adresse email doit respecter le format.
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <label for="prenom" class="form-label">* Prénom</label>
-                <input v-model.trim="file.firstname" type="text" class="form-control" id="prenom" required>
-                <div class="error" :class="{ fieldError: firstnameError }">
-                    Le prénom est obligatoire.
-                </div>
-            </div>
-            <div class="col-md-4">
-                <label for="nom" class="form-label">* Nom</label>
-                <input v-model.trim="file.lastname" type="text" class="form-control" id="nom" required>
-                <div class="error" :class="{ fieldError: lastnameError }">
-                    Le nom est obligatoire.
-                </div>
-            </div>
-            <div></div>
-            <div v-if="type === 'doctor'" class="col-md-12">
-                <label class="form-label">* Spécialités</label>
-                <TagSelector @new-selection="updateSpecialtiesSelection" :options="specialties" />
-                <div class="error" :class="{ fieldError: specialtiesError }">
-                    Le médecin doit avoir au moins une spécialité.
-                </div>
-            </div>
-            <div v-if="type === 'patientFile'" class="col-md-4">
-                <label for="date_de_naissance" class="form-label">* Date de naissance</label>
-                <input @change="($event) => $event.target.blur()" v-model="file.dateOfBirth" type="date"
-                    class="form-control" id="date_de_naissance" required>
-                <div class="error" :class="{ fieldError: dateOfBirthPresentError }">
-                    La date de naissance est obligatoire.
-                </div>
-                <div class="error" :class="{ fieldError: dateOfBirthPastOrPresentError }">
-                    La date de naissance ne peut pas être dans le futur.
-                </div>
-            </div>
-            <div class="col-md-4">
-                <label for="telephone" class="form-label">* Numéro de téléphone</label>
-                <input v-model.trim="file.phone" type="text" class="form-control" id="telephone" required>
-                <div class="error" :class="{ fieldError: phoneError }">
-                    Le numéro de téléphone est obligatoire.
-                </div>
-            </div>
-            <div class="col-md-4">
-                <label for="email" class="form-label">* Adresse e-mail</label>
-                <input v-model="file.email" type="mail" class="form-control" id="email" required>
-                <div class="error" :class="{ fieldError: emailPresentError }">
-                    L'adresse email est obligatoire.
-                </div>
-                <div class="error" :class="{ fieldError: emailFormatError }">
-                    L'adresse email doit respecter le format.
-                </div>
-            </div>
-            <div></div>
             <fieldset class="row g-3">
                 <legend>Adresse</legend>
-                <AddressPicker @new-selection="fillAddress" :error-message-service="setErrorMessage"
+                <AddressPicker class="col-md-4" @new-selection="fillAddress" :error-message-service="setErrorMessage"
                     :set-loader-service="setLoader" :clear-loader-service="clearLoader" />
-                <div></div>
+                <div class="w-100 m-0"></div>
                 <div class="col-md-4">
-                    <label for="rue1" class="form-label">* Numéro et voie</label>
-                    <input v-model.trim="file.address.street1" type="text" class="form-control" id="rue1" required>
-                    <div class="error" :class="{ fieldError: street1Error }">
+                    <label for="street1" class="form-label">* Numéro et voie</label>
+                    <input v-model.trim="file.address.street1" type="text" class="form-control" id="street1" required>
+                    <div class="invalid-feedback">
                         La voie est obligatoire.
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <label for="rue2" class="form-label">Complément d'adresse</label>
-                    <input v-model.trim="file.address.street2" type="text" class="form-control" id="rue2">
+                    <label for="street2" class="form-label">Complément d'adresse</label>
+                    <input v-model.trim="file.address.street2" type="text" class="form-control" id="street2">
                 </div>
                 <div class="col-md-4">
-                    <label for="commune" class="form-label">* Commune</label>
-                    <input v-model.trim="file.address.city" type="text" class="form-control" id="commune" required>
-                    <div class="error" :class="{ fieldError: cityError }">
+                    <label for="city" class="form-label">* Commune</label>
+                    <input v-model.trim="file.address.city" type="text" class="form-control" id="city" required>
+                    <div class="invalid-feedback">
                         La commune est obligatoire.
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <label for="etat" class="form-label">Etat ou région</label>
-                    <input v-model.trim="file.address.state" type="text" class="form-control" id="etat">
+                    <label for="state" class="form-label">Etat ou région</label>
+                    <input v-model.trim="file.address.state" type="text" class="form-control" id="state">
                 </div>
                 <div class="col-md-4">
-                    <label for="code_postal" class="form-label">* Code postal</label>
-                    <input v-model.trim="file.address.zipcode" type="text" class="form-control" id="code_postal"
-                        required>
-                    <div class="error" :class="{ fieldError: zipcodeError }">
+                    <label for="zipcode" class="form-label">* Code postal</label>
+                    <input v-model.trim="file.address.zipcode" type="text" class="form-control" id="zipcode" required>
+                    <div class="invalid-feedback">
                         Le code postal est obligatoire.
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <label for="pays" class="form-label">* Pays</label>
-                    <input v-model.trim="file.address.country" type="text" class="form-control" id="pays" required>
-                    <div class="error" :class="{ fieldError: countryError }">
+                    <label for="country" class="form-label">* Pays</label>
+                    <input v-model.trim="file.address.country" type="text" class="form-control" id="country" required>
+                    <div class="invalid-feedback">
                         Le pays est obligatoire.
                     </div>
                 </div>
             </fieldset>
-            <div class="col-12">
-                <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Créer</button>
+            <div class="row justify-content-center justify-content-md-start">
+                <div class="col-sm-6 col-md-3 g-0">
+                    <div class="vstack gap-2 mt-4 px-2 pb-4">
+                        <button class="btn btn-primary d-flex align-items-center justify-content-center py-2"
+                            type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                                class="bi bi-check me-1" viewBox="0 0 16 16">
+                                <path
+                                    d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+                            </svg>
+                            Créer
+                        </button>
+                        <RouterLink to="/main"
+                            class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                class="bi bi-backspace me-2" viewBox="0 0 16 16">
+                                <path
+                                    d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z" />
+                                <path
+                                    d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z" />
+                            </svg>
+                            Retour
+                        </RouterLink>
+                    </div>
+                </div>
             </div>
         </form>
-        <br>
-        <div class="col-12">
-            <button @click="$router.go(-1);" type="button" class="btn btn-light">
-                <i class="fa-solid fa-right-from-bracket"></i> Retour</button>
-        </div>
-        <br>
-    </div>
-    <div class="container" :hidden="!created">
-        <div class="col-12">
-            <div>
-                {{ creationMessage }}
-                <span id="code">{{ creationCode }}</span>
-                <div class="button" @click="copy">Copier</div>
+        <div class="row" v-show="created">
+            <div class="col-12">
+                <p class="d-flex align-items-center">
+                    {{ creationMessage }}
+                    <span class="d-inline-block rounded px-1 ms-1 bg-light fst-italic user-select-all">{{ creationCode }}</span>
+                    <span class="btn btn-success btn-sm ms-3" @click="copy">Copier</span>
+                </p>
             </div>
-
+            <div class="col-sm-4 col-md-2 mt-3">
+                <RouterLink to="/main" class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-backspace me-2"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z" />
+                        <path
+                            d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z" />
+                    </svg>
+                    Retour
+                </RouterLink>
+            </div>
+            <br>
         </div>
-        <br>
-        <div class="col-12">
-            <button @click="$router.go(-1);" type="button" class="btn btn-light">
-                <i class="fa-solid fa-right-from-bracket"></i> Retour</button>
-        </div>
-        <br>
     </div>
 </template>
 
@@ -186,20 +210,6 @@ export default {
                     country: "",
                 },
             },
-            mustCheck: false,
-            idError: false,
-            firstnameError: false,
-            lastnameError: false,
-            specialtiesError: false,
-            dateOfBirthPresentError: false,
-            dateOfBirthPastOrPresentError: false,
-            phoneError: false,
-            emailPresentError: false,
-            emailFormatError: false,
-            street1Error: false,
-            cityError: false,
-            zipcodeError: false,
-            countryError: false,
         }
     },
     async created() {
@@ -222,52 +232,18 @@ export default {
         }
     },
     methods: {
+        moveUp() {
+            document.querySelector("#top").scrollIntoView(false);
+        },
         updateSpecialtiesSelection(specialties) {
             this.file.specialties = specialties;
-            this.checkForm();
         },
         fillAddress(address) {
             this.file.address = address;
-            this.checkForm();
         },
-        checkForm() {
-            this.file.id = this.file.id.toUpperCase();
-
-            if (this.mustCheck) {
-                this.idError = !this.file.id;
-                this.firstnameError = !this.file.firstname;
-                this.lastnameError = !this.file.lastname;
-                this.specialtiesError = this.type === "doctor" && this.file.specialties.length < 1;
-                this.dateOfBirthPresentError = this.type === "patientFile" && !this.file.dateOfBirth;
-                this.dateOfBirthPastOrPresentError = this.type === "patientFile" && this.file.dateOfBirth && new Date(this.file.dateOfBirth) > new Date();
-                this.phoneError = !this.file.phone;
-                this.emailPresentError = !this.file.email;
-                this.emailFormatError = this.file.email && !new RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, 'g').test(this.file.email);
-                this.street1Error = !this.file.address.street1;
-                this.cityError = !this.file.address.city;
-                this.zipcodeError = !this.file.address.zipcode;
-                this.countryError = !this.file.address.country;
-            }
-
-            return (
-                !this.idError &&
-                !this.firstnameError &&
-                !this.lastnameError &&
-                !this.specialtiesError &&
-                !this.dateOfBirthPresentError &&
-                !this.dateOfBirthPastOrPresentError &&
-                !this.phoneError &&
-                !this.emailPresentError &&
-                !this.emailFormatError &&
-                !this.street1Error &&
-                !this.cityError &&
-                !this.zipcodeError &&
-                !this.countryError
-            );
-        },
-        async submitAddFile() {
-            this.mustCheck = true;
-            if (this.checkForm()) {
+        async submitAddFile($event) {
+            let form = $event.target;
+            if (form.checkValidity()) {
                 let service;
                 if (this.type === "doctor") {
                     service = Service.addDoctor;
@@ -286,12 +262,18 @@ export default {
                     if (error.response.data?.message) {
                         this.setErrorMessage(error.response.data.message);
                     }
+                    nextTick(this.moveUp);
                 } finally {
                     this.clearLoader(id);
                 }
             } else {
+                form.classList.add("was-validated");
                 this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
-                nextTick(() => { document.querySelector(".fieldError")?.scrollIntoView(false); });
+                nextTick(() => {
+                    [...document.querySelectorAll(".invalid-feedback")].filter(
+                        el => getComputedStyle(el, null).display === "block"
+                    )[0]?.scrollIntoView(false);
+                });
             }
         },
         copy() {
@@ -306,40 +288,6 @@ export default {
 </script>
 
 <!-- eslint-disable prettier/prettier -->
-<style scoped>
-.error {
-    display: none;
-}
+<style>
 
-.error.fieldError {
-    display: initial;
-    color: red;
-}
-
-#code {
-    color: blue;
-}
-
-.button {
-    display: inline-block;
-    color: #6c757d;
-    border: 2px solid #6c757d;
-    border-radius: 5px;
-    padding: 0 0.5em;
-    margin-left: 0.5rem;
-    box-shadow: 3px 3px 2px gray;
-}
-
-.button:hover {
-    color: #fff;
-    background-color: #b2c3d3;
-    border-color: #6c757d;
-    cursor: pointer;
-}
-
-.button:active {
-    background-color: #8d99a3;
-    box-shadow: 0 0 0 white;
-    transform: translate(3px, 3px);
-}
 </style>
