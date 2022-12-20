@@ -9,8 +9,8 @@
             <div class="row g-3">
                 <div class="col-md-4">
                     <label for="id" class="form-label">* Identifiant</label>
-                    <input @input="file.id = file.id.toLocaleUpperCase();" v-model.trim="file.id" type="text" class="form-control"
-                        id="id" required>
+                    <input @input="file.id = file.id.toLocaleUpperCase();" v-model.trim="file.id" type="text"
+                        class="form-control" id="id" required>
                     <div class="invalid-feedback">
                         L'identifiant est obligatoire.
                     </div>
@@ -31,7 +31,8 @@
                 </div>
                 <div v-if="type === 'doctor'" class="col-md-12">
                     <label for="specialties_list" class="form-label">* Spécialités</label>
-                    <TagSelector @new-selection="updateSpecialtiesSelection" :options="specialties" />
+                    <TagSelector @new-selection="updateSpecialtiesSelection" :options="specialties"
+                        :hasError="mustCheck && file.specialties.length === 0" :noError="mustCheck && file.specialties.length > 0" />
                     <input type="text" class="d-none" id="specialties_list" :value="file.specialties.join(', ')"
                         required>
                     <div class="invalid-feedback">
@@ -140,14 +141,16 @@
             <div class="col-12">
                 <p class="d-flex align-items-center">
                     {{ creationMessage }}
-                    <span class="d-inline-block rounded px-1 ms-1 bg-light fst-italic user-select-all">{{ creationCode }}</span>
+                    <span class="d-inline-block rounded px-1 ms-1 bg-light fst-italic user-select-all">{{ creationCode
+                    }}</span>
                     <span class="btn btn-success btn-sm ms-3" @click="copy">Copier</span>
                 </p>
             </div>
             <div class="col-sm-4 col-md-2 mt-3">
-                <RouterLink to="/main" class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-backspace me-2"
-                        viewBox="0 0 16 16">
+                <RouterLink to="/main"
+                    class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                        class="bi bi-backspace me-2" viewBox="0 0 16 16">
                         <path
                             d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z" />
                         <path
@@ -190,6 +193,7 @@ export default {
         return {
             editing: false,
             created: false,
+            mustCheck: false,
             creationMessage: "",
             creationCode: "",
             specialties: [],
@@ -268,6 +272,7 @@ export default {
                 }
             } else {
                 form.classList.add("was-validated");
+                this.mustCheck = true;
                 this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
                 nextTick(() => {
                     [...document.querySelectorAll(".invalid-feedback")].filter(
