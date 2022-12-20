@@ -8,7 +8,7 @@
           <div class="row g-3">
             <div class="col-md-6">
               <label for="id" class="form-label">* Identifiant</label>
-              <input style="text-transform: uppercase;" v-model.trim="user.id" type="text" class="form-control" id="id"
+              <input @input="user.id = user.id.toLocaleUpperCase();" v-model.trim="user.id" type="text" class="form-control" id="id"
                 required>
               <div class="invalid-feedback">
                 L'identifiant est obligatoire.
