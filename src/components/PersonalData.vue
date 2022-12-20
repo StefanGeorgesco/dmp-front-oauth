@@ -276,13 +276,13 @@ export default {
           this.file = response.data;
           this.update = false;
           this.editing = false;
-          nextTick(this.moveUp);
         } catch (error) {
           if (error.response.data?.message) {
             this.setErrorMessage(error.response.data.message);
           }
         } finally {
           this.clearLoader(id);
+          nextTick(this.moveUp);
         }
       } else {
         form.classList.add("was-validated");
