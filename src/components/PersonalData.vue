@@ -165,7 +165,6 @@
         </form>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -302,4 +301,6 @@ export default {
 </script>
 
 <!-- eslint-disable prettier/prettier -->
-<style></style>
+<style>
+
+</style>
