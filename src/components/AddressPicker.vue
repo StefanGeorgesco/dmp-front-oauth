@@ -2,7 +2,7 @@
 
 <template>
     <div class="position-relative">
-        <input type="search" v-model="searchString" @keyup.esc="clear" @blur="delayedClear"
+        <input type="text" v-model="searchString" @keyup.esc="clear" @blur="delayedClear"
             v-debounce:500ms="findAddresses" placeholder="Recherche..." aria-label="Search">
         <div class="position-absolute top-100 start-0 mt-2 p-2 border rounded shadow bg-white" style="z-index: 1000;"
             v-show="foundAddresses.length > 0">
