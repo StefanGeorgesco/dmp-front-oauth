@@ -3,7 +3,7 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-8 col-xl-6 pb-3">
-        <h1 class="fs-2 text-center py-3">S'enregistrer</h1>
+        <h1 id="top" class="fs-2 text-center py-3">S'enregistrer</h1>
         <form @submit.prevent="submitSignUp" class="row g-3 needs-validation py-3" novalidate>
           <div class="row g-3">
             <div class="col-md-6">
@@ -36,9 +36,11 @@
               <label for="passwordRepeat" class="form-label">* Veuillez ressaisir le mot de passe</label>
               <input @input="checkPasswordRepeat = false" v-model="passwordRepeat" type="password" class="form-control"
                 id="passwordRepeat" :pattern="checkPasswordRepeat ? user.password : '.*'" required>
-              <div class="invalid-feedback">
-                <span v-show="passwordRepeat.length === 0">Le mot de passe doit être resaissi.</span>
-                <span v-show="passwordRepeat.length > 0">Le mot de passe resaissi doit être identique.</span>
+              <div class="invalid-feedback" v-show="passwordRepeat.length === 0">
+                Le mot de passe doit être resaissi.
+              </div>
+              <div class="invalid-feedback" v-show="passwordRepeat.length > 0">
+                Le mot de passe resaissi doit être identique.
               </div>
             </div>
             <div class="col-md-6">
@@ -60,7 +62,8 @@
                   </svg>
                   S'enregistrer
                 </button>
-                <RouterLink to="/" class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2">
+                <RouterLink to="/"
+                  class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2">
                   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                     class="bi bi-backspace me-2" viewBox="0 0 16 16">
                     <path
@@ -101,11 +104,14 @@ export default {
     };
   },
   methods: {
+    moveUp() {
+      document.querySelector("#top").scrollIntoView(false);
+    },
     async submitSignUp($event) {
       let form = $event.target;
       form.classList.add("was-validated");
       this.checkPasswordRepeat = true;
-      if (form.checkValidity()) {
+      if (form.checkValidity() && this.passwordRepeat === this.user.password) {
         try {
           await Service.signUp(this.user);
           this.setSuccessMessage("Le compte a bien été créé. Veuillez vous connecter.");
@@ -114,6 +120,7 @@ export default {
           if (error.response.data?.message) {
             this.setErrorMessage(error.response.data.message);
           }
+          this.moveUp();
         }
       } else {
         this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
