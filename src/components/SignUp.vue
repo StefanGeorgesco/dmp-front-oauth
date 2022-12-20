@@ -120,7 +120,7 @@ export default {
           if (error.response.data?.message) {
             this.setErrorMessage(error.response.data.message);
           }
-          this.moveUp();
+          nextTick(this.moveUp);
         }
       } else {
         this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
