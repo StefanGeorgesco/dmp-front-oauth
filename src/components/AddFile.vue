@@ -139,11 +139,12 @@
         </form>
         <div class="row" v-show="created">
             <div class="col-12">
-                <p class="d-flex align-items-center">
+                <p>
                     {{ creationMessage }}
-                    <span class="d-inline-block rounded px-1 ms-1 bg-light fst-italic user-select-all">{{ creationCode
-                    }}</span>
-                    <span class="btn btn-success btn-sm ms-3" @click="copy">Copier</span>
+                    <span class="d-inline-block rounded px-1 ms-1 bg-light fst-italic user-select-all">
+                        {{ creationCode }}
+                    </span>
+                    <span class="btn btn-success d-inline-block btn-sm ms-3 py-0 mb-1" @click="copy">Copier</span>
                 </p>
             </div>
             <div class="col-sm-4 col-md-2 mt-3">
