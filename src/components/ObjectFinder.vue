@@ -1,12 +1,14 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div class="tag-input" style="margin: 0;">
-        <div v-if="selectedOject" class="tag">
+    <div class="form-control position-relative d-flex flex-column m-0 p-0 ps-1">
+        <div class="btn btn-sm btn-primary py-2 px-3 m-1" v-if="selectedOject">
             {{ objectRepFn(selectedOject) }}
         </div>
-        <input @keyup.esc="clear" @blur="delayedClear" v-debounce:300ms="searchObjects" ref="input" v-model="searchString" type="text"
+        <input @keyup.esc="clear" @blur="delayedClear" v-debounce:300ms="searchObjects" class="py-1 m-1"
+            style="outline: none; border: none;" placeholder="Rechercher..." v-model="searchString" type="text"
             :disabled="disabled" v-show="!disabled">
-        <div class="options-list" v-show="foundObjects.length > 0">
+        <div class="position-absolute top-100 start-0 end-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
+            style="z-index: 1000; max-height: 50vh;" v-show="foundObjects.length > 0">
             <div class="tag-option" v-for="o in foundObjects" :key="o.id" @click="select(o)">
                 {{ objectRepFn(o) }}
             </div>
@@ -98,55 +100,7 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style scoped>
-.tag-input {
-    position: relative;
-    border: 1px solid #ced4da;
-    border-radius: 0.375rem;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0;
-    margin: 0;
-}
-
-.tag-input>.tag {
-    flex: 0 1 auto;
-    border-radius: 0.375rem;
-    background-color: cornflowerblue;
-    padding: 0.25em 1em;
-    margin: 0.25em;
-    color: white;
-}
-
-.tag-input>input {
-    border: none;
-    outline: none;
-    flex: 1 0 auto;
-    margin: 0.25em;
-    padding: 0.25em;
-}
-
-.tag-input>.options-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 99;
-    background-color: #ffffff;
-    border: 1px solid #ced4da;
-    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
-    padding: 0.25em 0 0.5em 0;
-}
-
-.options-list .tag-option {
-    padding-left: 1em;
-}
-
-.options-list .tag-option:not(:last-child) {
-    border-bottom: 1px dotted lightgray;
-
-}
-
-.options-list .tag-option:hover {
+.tag-option:hover {
     cursor: pointer;
     background-color: #eeeeee;
 }
