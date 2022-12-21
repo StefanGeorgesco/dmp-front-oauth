@@ -4,7 +4,7 @@
     <div class="position-relative">
         <input type="text" v-model="searchString" @keyup.esc="clear" @blur="delayedClear"
             v-debounce:500ms="findAddresses" placeholder="Recherche..." aria-label="Search">
-        <div class="position-absolute top-100 start-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
+        <div class="position-absolute top-100 start-0 end-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
             style="z-index: 1000; max-height: 33vh;" v-show="foundAddresses.length > 0">
             <div class="option-item" v-for="address in foundAddresses" :key="address.properties.id"
                 @click="select(address)">
