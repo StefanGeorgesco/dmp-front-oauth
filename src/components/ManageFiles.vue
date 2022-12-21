@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
       <div class="col-md-8 col-lg-6 col-xl-5">
         <div class="row text-center mt-3 py-1 mb-1">
-          <h2>Gérer les dossiers {{ type === "doctor" ? "des médecins" : "patients" }}</h2>
+          <h1 class="h2">Gérer les dossiers {{ type === "doctor" ? "des médecins" : "patients" }}</h1>
         </div>
         <div class="row position-relative justify-content-center g-3 py-1 my-1">
           <input @keyup.esc="clear" @blur="delayedClear" v-model="searchString" type="text" @input="findFiles"
