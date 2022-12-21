@@ -2,7 +2,8 @@
 <template>
     <div class="d-flex align-items-center form-control p-0 m-0" :class="{ 'error': hasError, 'noError': noError }">
         <div class="position-relative d-flex flex-wrap flex-fill m-0 p-0 ps-1">
-            <div class="btn btn-sm btn-primary d-inline-flex align-items-center py-1 px-1 my-1 me-1" v-for="o in selectedOptions" :key="o.id">
+            <div class="btn btn-sm btn-primary d-inline-flex align-items-center py-1 px-2 my-1 me-1"
+                v-for="o in selectedOptions" :key="o.id">
                 {{ o.id }} - {{ o.description }}
                 <span class="btn btn-close btn-close-white ms-1" @click="remove(o)"></span>
             </div>
