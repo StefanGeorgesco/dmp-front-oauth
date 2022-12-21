@@ -1,53 +1,100 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div class="card col-md-4">
+    <div class="card p-0 m-0">
+        <div class="card-header d-inline-flex align-itms-center py-3">
+            <h2 class="h5 card-title m-0">{{ file.id }} - {{ file.firstname }} {{ file.lastname }}</h2>
+            <span class="btn btn-close ms-auto" @click="$emit('close')"></span>
+        </div>
         <div class="card-body">
-            <h5 class="card-title">{{ file.id }} - {{ file.firstname }} {{ file.lastname }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{ type === "doctor" ? "Médecin" : "Patient" }}</h6>
+            <h3 class="h6 card-title mb-4">
+                {{ type === "doctor" ? "Dossier de médecin" : "Dossier patient" }}
+            </h3>
             <template v-if="type === 'patientFile'">
                 <p class="card-text">
                     Date de naissance : {{ new Date(file.dateOfBirth).toLocaleDateString() }}
                 </p>
-                <p v-if="!updatingReferringDoctor">
-                    Médecin référent : {{ file.referringDoctorId }} - {{ file.referringDoctorFirstname }}
-                    {{ file.referringDoctorLastname }} ({{ file.referringDoctorSpecialties.join(", ") }})
-                    <span v-if="role === 'ADMIN'" @click="updatingReferringDoctor = true" class="btn btn-primary"><i
-                            class="fa-solid fa-pen"></i> Modifier le médecin</span>
-                </p>
-                <div v-else class="container">
-                    <form @submit.prevent="submitUpdateReferringDoctor" @input="checkForm" class="row g-3" novalidate>
-                        <div class="col-md-12"></div>
-                        <ObjectFinder @new-selection="updateDoctorSelection" object-type="doctor" :object-value="referringDoctor" :object-rep-fn="toString" :object-filter-fn="objectFilter" />
-                        <div class="col-12">
-                            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i>
-                                Enregistrer</button>
+                <div v-show="!updatingReferringDoctor">
+                    <p class="card-text d-inline-flex align-items-center">
+                        <span>
+                            Médecin référent : {{ file.referringDoctorId }} - {{ file.referringDoctorFirstname }}
+                            {{ file.referringDoctorLastname }} ({{ file.referringDoctorSpecialties.join(", ") }})
+                        </span>
+                        <span v-if="role === 'ADMIN'" @click="updatingReferringDoctor = true"
+                            class="ms-2 btn btn-primary d-inline-flex align-items-center py-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-pencil" viewBox="0 0 16 16">
+                                <path
+                                    d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                            </svg>
+                        </span>
+                    </p>
+                </div>
+                <div v-show="updatingReferringDoctor">
+                    <form @submit.prevent="submitUpdateReferringDoctor">
+                        <ObjectFinder @new-selection="updateDoctorSelection" object-type="doctor"
+                            :object-value="referringDoctor" :object-rep-fn="toString"
+                            :object-filter-fn="objectFilter" />
+                        <div class="row justify-content-center">
+                            <div class="col-md-8 col-lg-6">
+                                <div class="vstack gap-2 mt-4">
+                                    <button
+                                        class="btn btn-primary d-flex align-items-center justify-content-center py-2"
+                                        type="submit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                                            fill="currentColor" class="bi bi-check me-1" viewBox="0 0 16 16">
+                                            <path
+                                                d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+                                        </svg>
+                                        Enregistrer
+                                    </button>
+                                    <a role="button" @click="cancelEditReferringDoctorAction"
+                                        class="btn btn-secondary d-flex align-items-center justify-content-center py-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                                            fill="currentColor" class="bi bi-x me-1" viewBox="0 0 16 16">
+                                            <path
+                                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                        </svg>
+                                        Annuler
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </form>
-                    <br>
-                    <div class="col-12">
-                        <button @click="cancelEditReferringDoctorAction" type="button" class="btn btn-light"><i
-                                class="fa-solid fa-xmark"></i> Annuler</button>
-                    </div>
                 </div>
-                <RouterLink v-if="role === 'DOCTOR' && canEditKnown && canEdit" :to="viewFileUrl"
-                    class="btn btn-primary"><i class="fa-solid fa-pen"></i> Editer
-                </RouterLink>
             </template>
-            <p v-else-if="type === 'doctor'" class="card-text">
-                {{ file.specialties.map(s => s.description).join(", ") }}
-            </p>
-            <button v-if="role === 'ADMIN' && !updatingReferringDoctor" type="button" class="btn btn-danger"
-                data-bs-toggle="modal" data-bs-target="#deleteModal">
-                <i class="fa-solid fa-trash-can"></i> Supprimer le dossier
+            <template v-else-if="type === 'doctor'">
+                <p class="card-text">
+                    {{ file.specialties.map(s => s.description).join(", ") }}
+                </p>
+            </template>
+        </div>
+        <div class="card-footer" style="min-height: 3.5rem;">
+            <RouterLink v-if="type === 'patientFile' && role === 'DOCTOR' && canEditKnown && canEdit" :to="viewFileUrl"
+                class="btn btn-primary d-inline-flex align-items-center px-3" role="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-pencil me-2" viewBox="0 0 16 16">
+                    <path
+                        d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                </svg>
+                Editer
+            </RouterLink>
+            <button v-if="role === 'ADMIN' && !updatingReferringDoctor" type="button"
+                class="btn btn-danger d-inline-flex align-items-center px-3" data-bs-toggle="modal"
+                data-bs-target="#deleteModal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                    class="bi bi-trash3-fill me-2" viewBox="0 0 16 16">
+                    <path
+                        d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+                </svg>
+                Supprimer le dossier
             </button>
-            <span @click="$emit('close')"></span>
         </div>
     </div>
     <div class="modal fade" id="deleteModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Suppression</h5>
+                    <h5 class="modal-title">Suppression</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                         ref="modalClose"></button>
                 </div>
@@ -57,7 +104,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button @click="deleteFile" type="button" class="btn btn-primary" ref="confirm">Confirmer</button>
+                    <button @click="deleteFile" type="button" class="btn btn-primary">Confirmer</button>
                 </div>
             </div>
         </div>
@@ -68,6 +115,7 @@
 <script>
 import { RouterLink } from "vue-router";
 import { mapState, mapActions } from "pinia";
+import { Modal } from "bootstrap";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore.js";
 import { useLoaderStore } from '../stores/loaderStore';
@@ -99,11 +147,15 @@ export default {
             canEdit: null,
             updatingReferringDoctor: false,
             referringDoctor: null,
+            modal: null,
         };
     },
     async created() {
         this.updateCanEdit();
         if (this.type === "patientFile") this.getReferringdoctor();
+    },
+    mounted() {
+        this.modal = new Modal(document.getElementById("deleteModal"));
     },
     watch: {
         async file() {
@@ -120,7 +172,7 @@ export default {
     },
     methods: {
         async deleteFile() {
-            this.$refs.modalClose.click();
+            this.modal.hide();
             let service;
             if (this.type === "doctor") {
                 service = Service.deleteDoctor;
@@ -174,7 +226,7 @@ export default {
             let id = this.setLoader();
             try {
                 await Service.updateReferringDoctor(this.file.id, this.referringDoctor);
-                this.setSuccessMessage("Le médecin référent a bien été modifié.");
+                this.setSuccessMessage("Le médecin référent a bien été enregistré.");
                 this.updatingReferringDoctor = false;
                 this.$emit("referringDoctorUpdated", this.file);
             } catch (error) {
@@ -204,22 +256,5 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style>
-.card-body {
-    position: relative;
-}
 
-.card-body > span {
-    cursor: pointer;
-}
-
-.card-body > span:after {
-    position: absolute;
-    right: 1rem;
-    top: .5rem;
-    display: inline-block;
-    content: "\00d7";
-    margin: 0 0 0 1em;
-    font-size: x-large;
-    font-weight: bold;
-}
 </style>
