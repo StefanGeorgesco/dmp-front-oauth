@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="col-lg-9 ps-lg-3">
-      <div class="tab-content overflow-hidden pt-2">
+      <div class="tab-content overflow-hidden p-2">
         <div class="tab-pane show active" id="info-pane" role="tabpanel" aria-labelledby="info-tab" tabindex="0">
           <template v-if="file.id">
             <template v-if="role === 'DOCTOR'">

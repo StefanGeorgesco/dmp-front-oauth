@@ -1,37 +1,69 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="commands">
-    <h5 style="display: inline-block; margin-right: 0.5rem;">Eléments médicaux ({{ processedItems.length - 1 * editing
-      }})
-    </h5>
-    <input v-if="fetchedItems.length > 0" v-model="searchString" @keyup.esc="searchString = ''; $event.target.blur();"
-      style="border: 1px solid #ced4da; border-radius: 0.375rem; margin-right: 0.5rem;" type="text"
-      placeholder="Recherche..." size="8">
-    <select v-if="fetchedItems.length > 0" v-model="typeFilter" @change="$event.target.blur();"
-      style="border: 1px solid #ced4da; border-radius: 0.375rem; margin: 0;">
-      <option v-for="t in types" :key="t.value" :value="t.value" v-text="t.name"></option>
-    </select>
-    <template v-if="fetchedItems.length > 0 && processedItems.length - 1 * editing > 1">
-      <span style="margin-left: 1.25rem;">date </span>
-      <a @click="sortDirection = -1" :class="{ active: sortDirection === -1 }"
-        style="font-size: x-large; margin-right: 0.25rem; text-decoration: none">&uarr;</a>
-      <a @click="sortDirection = 1" :class="{ active: sortDirection === 1 }"
-        style="font-size: x-large; text-decoration:none">&darr;</a>
-    </template>
+  <div v-if="items.length > 0" class="row g-2 pb-3 mb-2 border-bottom">
+    <div class="col-sm-6 col-md-4">
+      <input v-if="fetchedItems.length > 0" v-model="searchString" @keyup.esc="searchString = ''; $event.target.blur();"
+        class="form-control" type="text" placeholder="Recherche...">
+    </div>
+    <div class="col-sm-6 col-md-4">
+      <select v-if="fetchedItems.length > 0" v-model="typeFilter" @change="$event.target.blur();" class="form-select">
+        <option v-for="t in types" :key="t.value" :value="t.value" v-text="t.name"></option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <div class="d-inline-flex align-items-center justify-content-between w-100">
+        <div v-if="fetchedItems.length > 0 && processedItems.length - 1 * editing > 1" class="btn-group d-inline-block"
+          role="group" aria-label="Choose order">
+          <input @click="sortDirection = 1" type="radio" class="btn-check" name="direction_item" id="option_item_1"
+            autocomplete="off" :checked="sortDirection === 1">
+          <label class="btn btn-secondary" for="option_item_1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+              <path
+                d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+            </svg>
+          </label>
+          <input @click="sortDirection = -1" type="radio" class="btn-check" name="direction_item" id="option_item_2"
+            autocomplete="off" :checked="sortDirection === -1">
+          <label class="btn btn-secondary" for="option_item_2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+              <path
+                d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+            </svg>
+          </label>
+        </div>
+        <div class="d-inline-block ps-2 ms-auto">
+          <div v-if="processedItems.length - 1 * editing > 1" class="d-flex align-items-center fst-italic">
+            ({{ processedItems.length - 1 * editing }} éléments)
+          </div>
+          <div v-else-if="processedItems.length - 1 * editing === 1" class="d-flex align-items-center fst-italic">
+            ({{ processedItems.length - 1 * editing }} élément)
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div v-if="items.length > 0" class="overflow-auto scroll-pane">
+  <div v-if="items.length > 0" class="scroll-pane overflow-auto pt-3">
     <template v-if="processedItems.length === 0">
       <p>Aucun élément ne correspond à la sélection</p>
     </template>
     <ItemComponent v-for="item in processedItems" :key="item.id" :item-value="item" :global-editing="editing"
       @editing-start="startEditing" @editing-canceled="cancelEditing" @editing-end="completeEditing" />
   </div>
-  <template v-if="items.length === 0">
+  <template v-else>
     <p>Il n'y a aucun élément médical sur ce dossier.</p>
   </template>
-  <br>
-  <button v-if="role === 'DOCTOR'" v-show="!editing" @click="addItem" type="button" class="btn btn-primary">
-    <i class="fa-solid fa-plus"></i> Ajouter
+  <button v-if="role === 'DOCTOR'" v-show="!editing" @click="addItem" type="button"
+    class="btn btn-primary d-flex align-items-center justify-content-center py-2 mt-3">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-file-earmark-plus me-2"
+      viewBox="0 0 16 16">
+      <path
+        d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+      <path
+        d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+    </svg>
+    Ajouter
   </button>
 </template>
 
@@ -164,26 +196,7 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style scoped>
-.commands {
-  padding: 0.45rem 0;
-  height: 3.5em;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-a:hover {
-  cursor: pointer;
-}
-
-a.active {
-  text-decoration: none;
-  color: black;
-  cursor: auto;
-}
-
 .scroll-pane {
-  height: calc(100vh - 17.8rem);
-  padding-top: 1rem;
+  max-height: calc(100vh - 15rem);
 }
 </style>

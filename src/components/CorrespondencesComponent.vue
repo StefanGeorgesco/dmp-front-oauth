@@ -1,46 +1,91 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="container">
-    <h5 style="display: inline-block; margin-right: 0.5rem;">Correspondances ({{ processedCorrepondences.length }})</h5>
-    <template v-if="addingCorrespondence || correspondences.length > 0">
-      <input v-if="correspondences.length > 0" v-model="searchString"
-        @keyup.esc="searchString = ''; $event.target.blur();"
-        style="border: 1px solid #ced4da; border-radius: 0.375rem;" type="text" placeholder="Recherche..." size="8">
-      <br>
-      <div class="commands" v-if="correspondences.length > 0" style="height: 2rem;">
-        <a @click="correspondenceFilter = 'ongoing'" :class="{ active: correspondenceFilter === 'ongoing' }">en
-          cours</a> -
-        <a @click="correspondenceFilter = 'past'" :class="{ active: correspondenceFilter === 'past' }">passées</a> -
-        <a @click="correspondenceFilter = 'all'" :class="{ active: correspondenceFilter === 'all' }">toutes</a>
-        <template v-if="processedCorrepondences.length > 1">
-          <span style="margin-left: 1.25rem;">date </span>
-          <a @click="sortDirection = -1" :class="{ active: sortDirection === -1 }"
-            style="font-size: x-large; margin-right: 0.25rem; text-decoration: none">&uarr;</a>
-          <a @click="sortDirection = 1" :class="{ active: sortDirection === 1 }"
-            style="font-size: x-large; text-decoration: none;">&darr;</a>
-        </template>
+  <template v-if="addingCorrespondence || correspondences.length > 0">
+    <div v-if="correspondences.length > 0" class="row g-2 pb-3 mb-2 border-bottom">
+      <div class="col-md-4">
+        <input class="form-control" v-if="correspondences.length > 0" v-model="searchString"
+          @keyup.esc="searchString = ''; $event.target.blur();"
+          style="border: 1px solid #ced4da; border-radius: 0.375rem;" type="text" placeholder="Recherche...">
       </div>
-      <br>
-      <div class="overflow-auto scroll-pane">
-        <template v-if="correspondences.length > 0 && processedCorrepondences.length === 0">
-          <p>Aucune correspondance ne correspond à la sélection.</p>
-        </template>
-        <CorrespondenceComponent v-for="correspondence in processedCorrepondences" :key="correspondence.id"
-          :correspondence="correspondence" :can-delete="isReferringDoctor"
-          @correspondence-updated="updateCorrespondences" />
-        <AddCorrespondence v-if="addingCorrespondence"
-          @correspondence-added="addingCorrespondence = false; updateCorrespondences();"
-          @canceled="addingCorrespondence = false" :patient-file-id="file.id" />
+      <div class="col-md-8">
+        <div class="d-inline-flex align-items-center justify-content-between w-100">
+          <div v-if="processedCorrepondences.length > 0" class="btn-group d-inline-block" role="group"
+            aria-label="Choose ongoing, past or all">
+            <input @click="correspondenceFilter = 'ongoing'" type="radio" class="btn-check" name="select_by_age"
+              id="select_by_age_ongoing" autocomplete="off" :checked="correspondenceFilter === 'ongoing'">
+            <label class="btn btn-secondary" for="select_by_age_ongoing">
+              En cours
+            </label>
+            <input @click="correspondenceFilter = 'past'" type="radio" class="btn-check" name="select_by_age"
+              id="select_by_age_past" autocomplete="off" :checked="correspondenceFilter === 'past'">
+            <label class="btn btn-secondary" for="select_by_age_past">
+              Passées
+            </label>
+            <input @click="correspondenceFilter = 'all'" type="radio" class="btn-check" name="select_by_age" id="select_by_age_all"
+              autocomplete="off" :checked="correspondenceFilter === 'all'">
+            <label class="btn btn-secondary" for="select_by_age_all">
+              Toutes
+            </label>
+          </div>
+          <div v-if="processedCorrepondences.length > 1" class="btn-group d-inline-block ms-2" role="group"
+            aria-label="Choose order">
+            <input @click="sortDirection = 1" type="radio" class="btn-check" name="direction_correspondence"
+              id="option_correspondence_1" autocomplete="off" :checked="sortDirection === 1">
+            <label class="btn btn-secondary" for="option_correspondence_1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                <path
+                  d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+              </svg>
+            </label>
+            <input @click="sortDirection = -1" type="radio" class="btn-check" name="direction_correspondence"
+              id="option_correspondence_2" autocomplete="off" :checked="sortDirection === -1">
+            <label class="btn btn-secondary" for="option_correspondence_2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                <path
+                  d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+              </svg>
+            </label>
+          </div>
+          <div class="d-inline-block ps-2 ms-auto">
+            <div v-if="processedCorrepondences.length > 1" class="d-flex align-items-center fst-italic">
+              ({{ processedCorrepondences.length }} éléments)
+            </div>
+            <div v-else-if="processedCorrepondences.length === 1" class="d-flex align-items-center fst-italic">
+              ({{ processedCorrepondences.length }} élément)
+            </div>
+          </div>
+        </div>
       </div>
-    </template>
-    <template v-else>
-      <p style="padding: 0.8rem 0;">Il n'y a aucune correspondance sur ce dossier.</p>
-    </template>
-  </div>
+    </div>
+    <div class="overflow-auto scroll-pane">
+      <template v-if="correspondences.length > 0 && processedCorrepondences.length === 0">
+        <p>Aucune correspondance ne correspond à la sélection.</p>
+      </template>
+      <CorrespondenceComponent v-for="correspondence in processedCorrepondences" :key="correspondence.id"
+        :correspondence="correspondence" :can-delete="isReferringDoctor"
+        @correspondence-updated="updateCorrespondences" />
+      <AddCorrespondence v-if="addingCorrespondence"
+        @correspondence-added="addingCorrespondence = false; updateCorrespondences();"
+        @canceled="addingCorrespondence = false" :patient-file-id="file.id" />
+    </div>
+  </template>
+  <template v-else>
+    <p>Il n'y a aucune correspondance sur ce dossier.</p>
+  </template>
   <template v-if="isReferringDoctor">
-    <button v-show="!addingCorrespondence" @click="addingCorrespondence = true" type="button" class="btn btn-primary"><i
-        class="fa-solid fa-plus"></i> Ajouter</button>
-    <br><br>
+    <button v-show="!addingCorrespondence" @click="addingCorrespondence = true" type="button"
+      class="btn btn-primary d-flex align-items-center justify-content-center py-2 mt-3">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+        class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
+        <path
+          d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+        <path
+          d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+      </svg>
+      Ajouter
+    </button>
   </template>
 </template>
 
@@ -135,28 +180,7 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style scoped>
-.container {
-  padding: 0.8rem 0;
-}
-
-.commands {
-  height: 3.5em;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-a:hover {
-  cursor: pointer;
-}
-
-a.active {
-  text-decoration: none;
-  color: black;
-  cursor: auto;
-}
-
 .scroll-pane {
-  height: calc(100vh - 20rem);
+  max-height: calc(100vh - 15rem);
 }
 </style>
