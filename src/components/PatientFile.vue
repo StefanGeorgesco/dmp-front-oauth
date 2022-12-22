@@ -11,7 +11,7 @@
             </button>
             <button class="nav-link" id="file-tab" data-bs-toggle="pill" data-bs-target="#file-pane" type="button"
               role="tab" aria-controls="file-pane" aria-selected="false">
-              Dossier
+              Dossier médical
             </button>
             <button class="nav-link" id="correspondence-tab" data-bs-toggle="pill" data-bs-target="#correspondence-pane"
               type="button" role="tab" aria-controls="correspondence-pane" aria-selected="false">
