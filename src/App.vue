@@ -77,7 +77,7 @@
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-  <main class="container-fluid pt-3" style="margin-top: 3.5rem;">
+  <main class="container-fluid pt-3" style="margin-top: 2.5rem;">
     <RouterView />
   </main>
 </template>
