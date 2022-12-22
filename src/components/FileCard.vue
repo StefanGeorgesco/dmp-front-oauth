@@ -147,15 +147,11 @@ export default {
             canEdit: null,
             updatingReferringDoctor: false,
             referringDoctor: null,
-            modal: null,
         };
     },
     async created() {
         this.updateCanEdit();
         if (this.type === "patientFile") this.getReferringdoctor();
-    },
-    mounted() {
-        this.modal = new Modal(document.getElementById("deleteModal"));
     },
     watch: {
         async file() {
@@ -172,7 +168,7 @@ export default {
     },
     methods: {
         async deleteFile() {
-            this.modal.hide();
+            Modal.getOrCreateInstance("#deleteModal").hide();
             let service;
             if (this.type === "doctor") {
                 service = Service.deleteDoctor;
