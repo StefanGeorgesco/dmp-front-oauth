@@ -7,12 +7,13 @@
     </div>
     <div class="col-sm-6 col-md-4">
       <select v-if="fetchedItems.length > 0" v-model="typeFilter" @change="$event.target.blur();" class="form-select form-select-sm">
-        <option v-for="t in types" :key="t.value" :value="t.value" v-text="t.name"></option>
+        <option v-for="t in types" :key="t.value" :value="t" v-text="t.category"></option>
       </select>
     </div>
     <div class="col-md-4">
       <div class="d-inline-flex align-items-center justify-content-between w-100">
-        <div v-if="fetchedItems.length > 0 && processedItems.length - 1 * editing > 1" class="btn-group btn-group-sm d-inline-block"
+        <img :src="typeFilter.imgurl" alt="" height="30" width="30" />
+        <div v-if="fetchedItems.length > 0 && processedItems.length - 1 * editing > 1" class="btn-group btn-group-sm d-inline-block ms-2"
           role="group" aria-label="Choose order">
           <input @click="sortDirection = 1" type="radio" class="btn-check" name="direction_item" id="option_item_1"
             autocomplete="off" :checked="sortDirection === 1">
@@ -55,11 +56,12 @@
       </div>
     </div>
   </div>
-  <div v-if="items.length > 0" class="scroll-pane overflow-auto pt-3">
+  <div v-if="items.length > 0" class="row overflow-auto scroll-pane d-flex flex-wrap">
     <template v-if="processedItems.length === 0">
       <p>Aucun élément ne correspond à la sélection</p>
     </template>
-    <ItemComponent v-for="item in processedItems" :key="item.id" :item-value="item" :global-editing="editing"
+    <ItemComponent v-for="item in processedItems" :key="item.id" :item-value="item" :types="types"
+      :global-editing="editing"
       @editing-start="startEditing" @editing-canceled="cancelEditing" @editing-end="completeEditing" />
   </div>
   <template v-else>
@@ -87,6 +89,12 @@ import { useLoaderStore } from '../stores/loaderStore';
 import { Service } from "../services/services.js";
 import ItemComponent from "./ItemComponent.vue";
 import { filterFn } from "../utils/utils";
+import imgUrlAll from "../assets/svg/all.svg";
+import imgUrlAct from "../assets/svg/act.svg";
+import imgUrlDiagnosis from "../assets/svg/diagnosis.svg";
+import imgUrlMail from "../assets/svg/mail.svg";
+import imgUrlPrescription from "../assets/svg/prescription.svg";
+import imgUrlSymptom from "../assets/svg/symptom.svg";
 
 export default {
   name: "ItemsComponent",
@@ -106,36 +114,49 @@ export default {
       editing: false,
       types: [
         {
-          name: "Tous",
+          category: "Tous",
           value: "",
+          imgurl: imgUrlAll,
         },
         {
-          name: "Actes",
+          category: "Actes",
           value: "act",
+          imgurl: imgUrlAct,
+          name: "Acte médical",
+
         },
         {
-          name: "Diagnostics",
+          category: "Diagnostics",
           value: "diagnosis",
+          imgurl: imgUrlDiagnosis,
+          name: "Diagnostic",
         },
         {
-          name: "Courriers",
+          category: "Courriers",
           value: "mail",
+          imgurl: imgUrlMail,
+          name: "Courrier",
         },
         {
-          name: "Prescriptions",
+          category: "Prescriptions",
           value: "prescription",
+          imgurl: imgUrlPrescription,
+          name: "Prescription",
         },
         {
-          name: "Symptômes",
+          category: "Symptômes",
           value: "symptom",
+          imgurl: imgUrlSymptom,
+          name: "Symptôme",
         },
       ],
-      typeFilter: "",
+      typeFilter: {},
       sortDirection: 1,
       searchString: "",
     };
   },
   async created() {
+    this.typeFilter = this.types[0],
     this.fetchItems();
   },
   watch: {
@@ -151,7 +172,7 @@ export default {
       return this.$route.params.id;
     },
     processedItems() {
-      return this.items.filter((item) => item.id ? item["@type"].indexOf(this.typeFilter) >= 0 : true)
+      return this.items.filter((item) => item.id ? item["@type"].indexOf(this.typeFilter.value) >= 0 : true)
         .filter(filterFn(this.searchString))
         .sort((i1, i2) => {
           if (!i1.id) return 1;
@@ -185,7 +206,7 @@ export default {
     },
     completeEditing() {
       this.editing = false;
-      this.typeFilter = "";
+      this.typeFilter.value = "";
       this.searchString = "";
       this.fetchItems();
     },

@@ -1,129 +1,152 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div ref="item" class="col-md-12 container" :class="{ highlighted: item.editing }" style="padding: 0 1rem;">
-        <form @submit.prevent="submitSaveItem" @input="checkForm" class="row g-3 needs-validation" novalidate>
-            <div class="col-md-5">
-                <div class="mb-3 row">
-                    <label for="item_type" class="col-sm-4 col-form-label">
-                        <span v-show="item.editing && !item.id">* </span>Type
-                    </label>
-                    <div class="col-sm-6">
-                        <select @change="checkForm" v-model="item['@type']" :disabled="item.id" id="item_type"
-                            class="form-control">
-                            <option v-for="t in types" :key="t.value" :value="t.value" v-text="t.name"
-                                :disabled="!t.value">
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="error" :class="{ fieldError: typeError }">
-                    Le type est obligatoire.
+    <div class="p-2 col-md-12" style="min-height: 20rem;">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header">
+                <div class="d-inline-flex align-items-center w-100">
+                    <img :src="imgurl" alt="" height="20" width="20" />
+                    <h6 class="m-0 ms-2">{{ types.filter((t) => t.value === item['@type'])[0]?.name }}</h6>
+                    <a role="button" data-bs-toggle="modal" :data-bs-target="'#deleteModal-' + item.id" class="ms-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red"
+                            class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                        </svg>
+                    </a>
                 </div>
             </div>
-            <div class="col-md-5">
-                <div class="mb-3 row">
-                    <label for="item_date" class="col-sm-3 col-form-label"><span v-show="item.editing && !item.id">*
-                        </span>Date</label>
-                    <div class="col-sm-7">
-                        <input @change="($event) => $event.target.blur()" v-model="item.date" type="date"
-                            class="form-control" id="item_date" :readonly="item.id" />
-                    </div>
-                </div>
-                <div class="error" :class="{ fieldError: datePresentError }">
-                    La date est obligatoire.
-                </div>
-                <div class="error" :class="{ fieldError: datePastOrPresentError }">
-                    La date ne peut pas être dans le futur.
+            <div class="card-body">
+                <div ref="item" :class="{ highlighted: item.editing }" style="padding: 0 1rem;">
+                    <form @submit.prevent="submitSaveItem" @input="checkForm" class="row g-3 needs-validation"
+                        novalidate>
+                        <div class="col-md-5">
+                            <div class="mb-3 row">
+                                <label for="item_type" class="col-sm-4 col-form-label">
+                                    <span v-show="item.editing && !item.id">* </span>Type
+                                </label>
+                                <div class="col-sm-6">
+                                    <select @change="checkForm" v-model="item['@type']" :disabled="item.id"
+                                        id="item_type" class="form-control">
+                                        <option v-for="t in types" :key="t.value" :value="t.value" v-text="t.name"
+                                            :disabled="!t.value">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="error" :class="{ fieldError: typeError }">
+                                Le type est obligatoire.
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="mb-3 row">
+                                <label for="item_date" class="col-sm-3 col-form-label"><span
+                                        v-show="item.editing && !item.id">*
+                                    </span>Date</label>
+                                <div class="col-sm-7">
+                                    <input @change="($event) => $event.target.blur()" v-model="item.date" type="date"
+                                        class="form-control" id="item_date" :readonly="item.id" />
+                                </div>
+                            </div>
+                            <div class="error" :class="{ fieldError: datePresentError }">
+                                La date est obligatoire.
+                            </div>
+                            <div class="error" :class="{ fieldError: datePastOrPresentError }">
+                                La date ne peut pas être dans le futur.
+                            </div>
+                        </div>
+                        <template v-if="item.id">
+                            <i class="author">
+                                Créé par {{ item.authoringDoctorFirstname }}
+                                {{ item.authoringDoctorLastname }}
+                                ({{ item.authoringDoctorId }})
+                                - Spécialité{{ item.authoringDoctorSpecialties.length > 1 ? "s" : "" }} :
+                                {{ item.authoringDoctorSpecialties.join(", ") }}
+                            </i>
+                        </template>
+                        <div class="col-md-12">
+                            <label for="item_comments" class="form-label">Commentaires</label>
+                            <textarea v-model.trim="item.comments" id="item_comments" class="form-control"
+                                :readonly="!item.editing"></textarea>
+                        </div>
+                        <template v-if="item['@type'] === 'act'">
+                            <label class="form-label"><span v-show="item.editing">* </span>Acte dispensé</label>
+                            <ObjectFinder object-type="medical-act" :object-value="item.medicalAct"
+                                :object-rep-fn="(o) => `${o.id} - ${o.description}`" :object-filter-fn="(o) => true"
+                                :disabled="!item.editing" @new-selection="selectMedicalAct" />
+                            <div class="error" :class="{ fieldError: medicalActError }">
+                                L'acte médical dispensé est obligatoire.
+                            </div>
+                        </template>
+                        <template v-if="item['@type'] === 'diagnosis'">
+                            <label class="form-label"><span v-show="item.editing">* </span>Maladie diagnostiquée</label>
+                            <ObjectFinder object-type="disease" :object-value="item.disease"
+                                :object-rep-fn="(o) => `${o.id} - ${o.description}`" :object-filter-fn="(o) => true"
+                                :disabled="!item.editing" @new-selection="selectDisease" />
+                            <div class="error" :class="{ fieldError: diseaseError }">
+                                La maladie diagnostiquée est obligatoire.
+                            </div>
+                        </template>
+                        <template v-if="item['@type'] === 'mail'">
+                            <label class="form-label"><span v-show="item.editing">* </span>Destinataire</label>
+                            <ObjectFinder object-type="doctor" :object-value="item.recipientDoctorId ? {
+    id: item.recipientDoctorId,
+    firstname: item.recipientDoctorFirstname,
+    lastname: item.recipientDoctorLastname,
+    specialties: item.recipientDoctorSpecialties,
+} : null" :objectRepFn="(o) => `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties.map(s => s.description ? s.description : s).join(', ')}`"
+                                :objectFilterFn="(o) => o.id !== userId" :disabled="!item.editing"
+                                @new-selection="selectRecipientDoctor" />
+                            <div class="error" :class="{ fieldError: recipientDoctorIdError }">
+                                Le médecin destinataire est obligatoire.
+                            </div>
+                            <div class="col-md-12">
+                                <label for="mail_text" class="form-label"><span v-show="item.editing">*
+                                    </span>Texte</label>
+                                <textarea v-model.trim="item.text" id="mail_text" class="form-control"
+                                    :readonly="!item.editing"></textarea>
+                                <div class="error" :class="{ fieldError: textError }">
+                                    Le texte du courrier est obligatoire.
+                                </div>
+                            </div>
+                        </template>
+                        <template v-if="item['@type'] === 'prescription' || item['@type'] === 'symptom'">
+                            <label for="description" class="form-label"><span v-show="item.editing">*
+                                </span>Description</label>
+                            <textarea v-model.trim="item.description" id="description" class="form-control"
+                                :readonly="!item.editing"></textarea>
+                            <div class="error" :class="{ fieldError: descriptionError }">
+                                La description
+                                <span v-if="item['@type'] === 'prescription'">de la prescription</span>
+                                <span v-else-if="item['@type'] === 'symptom'">du symptôme</span>
+                                est obligatoire.
+                            </div>
+                        </template>
+                        <div class="col-12">
+                            <button v-show="item.editing" class="btn btn-primary" type="submit">
+                                <i class="fa-solid fa-floppy-disk"></i> {{ item.id ? "Enregistrer" : "Créer" }}
+                            </button>
+                        </div>
+                    </form>
+                    <template v-if="!globalEditing && !item.editing && isAuthor">
+                        <button type="button" class="btn btn-primary" @click="startEditing">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            :data-bs-target="'#deleteModal-' + item.id">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </template>
+                    <template v-if="item.editing">
+                        <br>
+                        <button type="button" class="btn btn-light" @click="cancelEditing">
+                            <i class="fa-solid fa-xmark"></i> Annuler
+                        </button>
+                        <br><br>
+                    </template>
                 </div>
             </div>
-            <template v-if="item.id">
-                <i class="author">Créé par {{ item.authoringDoctorFirstname }} {{ item.authoringDoctorLastname }}
-                    ({{ item.authoringDoctorId }})
-                    - Spécialité{{ item.authoringDoctorSpecialties.length > 1 ? "s" : "" }} : {{
-                            item.authoringDoctorSpecialties.join(", ")
-                    }}</i>
-            </template>
-            <div class="col-md-12">
-                <label for="item_comments" class="form-label">Commentaires</label>
-                <textarea v-model.trim="item.comments" id="item_comments" class="form-control"
-                    :readonly="!item.editing"></textarea>
-            </div>
-            <template v-if="item['@type'] === 'act'">
-                <label class="form-label"><span v-show="item.editing">* </span>Acte dispensé</label>
-                <ObjectFinder object-type="medical-act" :object-value="item.medicalAct"
-                    :object-rep-fn="(o) => `${o.id} - ${o.description}`" :object-filter-fn="(o) => true"
-                    :disabled="!item.editing" @new-selection="selectMedicalAct" />
-                <div class="error" :class="{ fieldError: medicalActError }">
-                    L'acte médical dispensé est obligatoire.
-                </div>
-            </template>
-            <template v-if="item['@type'] === 'diagnosis'">
-                <label class="form-label"><span v-show="item.editing">* </span>Maladie diagnostiquée</label>
-                <ObjectFinder object-type="disease" :object-value="item.disease"
-                    :object-rep-fn="(o) => `${o.id} - ${o.description}`" :object-filter-fn="(o) => true"
-                    :disabled="!item.editing" @new-selection="selectDisease" />
-                <div class="error" :class="{ fieldError: diseaseError }">
-                    La maladie diagnostiquée est obligatoire.
-                </div>
-            </template>
-            <template v-if="item['@type'] === 'mail'">
-                <label class="form-label"><span v-show="item.editing">* </span>Destinataire</label>
-                <ObjectFinder object-type="doctor" :object-value="item.recipientDoctorId ? {
-                    id: item.recipientDoctorId,
-                    firstname: item.recipientDoctorFirstname,
-                    lastname: item.recipientDoctorLastname,
-                    specialties: item.recipientDoctorSpecialties,
-                } : null"
-                    :objectRepFn="(o) => `${o.firstname} ${o.lastname} (${o.id}) - ${o.specialties.map(s => s.description ? s.description : s).join(', ')}`"
-                    :objectFilterFn="(o) => o.id !== userId" :disabled="!item.editing"
-                    @new-selection="selectRecipientDoctor" />
-                <div class="error" :class="{ fieldError: recipientDoctorIdError }">
-                    Le médecin destinataire est obligatoire.
-                </div>
-                <div class="col-md-12">
-                    <label for="mail_text" class="form-label"><span v-show="item.editing">* </span>Texte</label>
-                    <textarea v-model.trim="item.text" id="mail_text" class="form-control"
-                        :readonly="!item.editing"></textarea>
-                    <div class="error" :class="{ fieldError: textError }">
-                        Le texte du courrier est obligatoire.
-                    </div>
-                </div>
-            </template>
-            <template v-if="item['@type'] === 'prescription' || item['@type'] === 'symptom'">
-                <label for="description" class="form-label"><span v-show="item.editing">* </span>Description</label>
-                <textarea v-model.trim="item.description" id="description" class="form-control"
-                    :readonly="!item.editing"></textarea>
-                <div class="error" :class="{ fieldError: descriptionError }">
-                    La description
-                    <span v-if="item['@type'] === 'prescription'">de la prescription</span>
-                    <span v-else-if="item['@type'] === 'symptom'">du symptôme</span>
-                    est obligatoire.
-                </div>
-            </template>
-            <div class="col-12">
-                <button v-show="item.editing" class="btn btn-primary" type="submit">
-                    <i class="fa-solid fa-floppy-disk"></i> {{ item.id ? "Enregistrer" : "Créer" }}
-                </button>
-            </div>
-        </form>
-        <template v-if="!globalEditing && !item.editing && isAuthor">
-            <button type="button" class="btn btn-primary" @click="startEditing">
-                <i class="fa-solid fa-pen"></i>
-            </button>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                :data-bs-target="'#deleteModal-' + item.id">
-                <i class="fa-solid fa-trash-can"></i>
-            </button>
-        </template>
-        <template v-if="item.editing">
-            <br>
-            <button type="button" class="btn btn-light" @click="cancelEditing">
-                <i class="fa-solid fa-xmark"></i> Annuler
-            </button>
-            <br><br>
-        </template>
+        </div>
     </div>
-    <hr style="border: 2px solid black; border-radius: 1px;">
     <div class="modal fade" :id="'deleteModal-' + item.id" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -169,6 +192,10 @@ export default {
             type: Boolean,
             required: true,
         },
+        types: {
+            type: Array,
+            required: true,
+        }
     },
     emits: ["editingStart", "editingCanceled", "editingEnd"],
     components: {
@@ -176,32 +203,6 @@ export default {
     },
     data() {
         return {
-            types: [
-                {
-                    name: "Choisir...",
-                    value: null,
-                },
-                {
-                    name: "Acte",
-                    value: "act",
-                },
-                {
-                    name: "Diagnostic",
-                    value: "diagnosis",
-                },
-                {
-                    name: "Courrier",
-                    value: "mail",
-                },
-                {
-                    name: "Prescription",
-                    value: "prescription",
-                },
-                {
-                    name: "Symptôme",
-                    value: "symptom",
-                },
-            ],
             item: { ...this.itemValue },
             mustCheck: false,
             typeError: false,
@@ -218,6 +219,9 @@ export default {
         if (!this.itemValue.id) this.$refs.item.scrollIntoView();
     },
     computed: {
+        imgurl() {
+            return this.types.filter((t) => t.value === this.item['@type'])[0]?.imgurl;
+        },
         isAuthor() {
             return this.item.authoringDoctorId === this.userId;
         },
@@ -337,52 +341,6 @@ export default {
 </script>
 
 <!-- eslint-disable prettier/prettier -->
-<style scoped>
-.container {
-    padding-top: 1rem;
-}
+<style>
 
-[readonly],
-[disabled] {
-    outline: none;
-    border: none;
-}
-
-select[disabled] {
-    background-color: white;
-}
-
-label,
-div>i {
-    font-weight: 100;
-}
-
-.form-control>input,
-select,
-textarea {
-    display: inline;
-}
-
-.highlighted {
-    background-color: aliceblue;
-}
-
-.error {
-    display: none;
-}
-
-.error.fieldError {
-    display: initial;
-    color: red;
-}
-
-button {
-    margin-right: 1em;
-}
-
-.author {
-    padding-top: 0;
-    margin-top: 0;
-    font-weight: 90;
-}
 </style>
