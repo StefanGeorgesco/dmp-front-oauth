@@ -1,7 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div class="p-1 col-md-3" style="min-height: 12.5rem;">
-        <div class="card h-100">
+        <div class="card h-100 shadow-sm">
             <div class="card-header">
                 <div class="d-inline-flex align-items-center w-100">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
