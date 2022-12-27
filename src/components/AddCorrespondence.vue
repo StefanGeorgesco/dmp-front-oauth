@@ -32,7 +32,9 @@
           <div class="col-12">
             <label for="doctor_input" class="form-label">* Médecin correspondant</label>
             <ObjectFinder object-type="doctor" :object-value="doctor?.id ? doctor : null" :object-rep-fn="toString"
-              :object-filter-fn="objectFilter" @new-selection="updateSelection" />
+              :object-filter-fn="objectFilter" @new-selection="updateSelection"
+              :hasError="mustCheck && !correspondence?.doctorId"
+              :noError="mustCheck && correspondence?.doctorId" />
             <input type="text" class="d-none" id="doctor_input" :value="correspondence?.doctorId" required>
             <div class="invalid-feedback">
               Le médecin est obligatoire.
@@ -81,6 +83,7 @@ export default {
     return {
       correspondence: null,
       tomorrow: null,
+      mustCheck: false,
     };
   },
   created() {
@@ -112,6 +115,7 @@ export default {
         patientFileId: this.patientFileId,
       };
       document.querySelector("form").classList.remove("was-validated");
+      this.mustCheck = false;
     },
     updateSelection(selection) {
       this.correspondence.doctorId = selection?.id;
@@ -120,7 +124,6 @@ export default {
       this.correspondence.doctorSpecialties = selection?.specialties.map(
         (s) => s.description
       );
-      this.checkForm();
     },
     async submitAddCorrespondence($event) {
       let form = $event.target;
@@ -140,12 +143,8 @@ export default {
         }
       } else {
         form.classList.add("was-validated");
+        this.mustCheck = true;
         this.setErrorMessage("Les données saisies sont incorrectes.");
-        nextTick(() => {
-          [...document.querySelectorAll(".invalid-feedback")].filter(
-            el => getComputedStyle(el, null).display === "block"
-          )[0]?.scrollIntoView(false);
-        });
       }
     },
     cancelAction() {
