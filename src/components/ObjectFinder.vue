@@ -6,7 +6,7 @@
         </div>
         <input @keyup.esc="clear" @blur="delayedClear" v-debounce:300ms="searchObjects" class="py-1 m-1"
             style="outline: none; border: none;" placeholder="Rechercher..." v-model="searchString" type="text"
-            :disabled="disabled" v-show="!disabled">
+            :disabled="disabled" v-show="!disabled" autofocus>
         <div class="position-absolute top-100 start-0 end-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
             style="z-index: 1000; max-height: 50vh;" v-show="foundObjects.length > 0">
             <div class="tag-option" v-for="o in foundObjects" :key="o.id" @click="select(o)">
