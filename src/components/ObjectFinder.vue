@@ -5,7 +5,7 @@
             <div class="btn btn-sm btn-primary py-2 px-3 m-1" v-if="selectedOject">
                 {{ objectRepFn(selectedOject) }}
             </div>
-            <input @keyup.esc="clear" @blur="delayedClear" v-debounce:300ms="searchObjects" class="flex-fill py-1 m-1"
+            <input @keyup.esc="clear" @blur="delayedClear" v-debounce:300ms="searchObjects" class="col-12 py-1 m-1"
                 style="outline: none; border: none;" placeholder="Rechercher..." v-model="searchString" type="text"
                 :disabled="disabled" v-show="!disabled" autofocus>
             <div class="position-absolute top-100 start-0 end-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
