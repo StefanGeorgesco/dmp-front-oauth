@@ -1,33 +1,34 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <template v-if="addingCorrespondence || correspondences.length > 0">
-    <div v-if="correspondences.length > 0" class="row g-2 pb-3 mb-2 border-bottom">
+    <div v-if="correspondences.length > 0" class="row g-1 pb-3 mb-2 border-bottom">
       <div class="col-md-4">
-        <input class="form-control" v-if="correspondences.length > 0" v-model="searchString"
-          @keyup.esc="searchString = ''; $event.target.blur();"
-          style="border: 1px solid #ced4da; border-radius: 0.375rem;" type="text" placeholder="Recherche...">
+        <input class="form-control form-control-sm" v-if="correspondences.length > 0" v-model="searchString"
+          @keyup.esc="searchString = ''; $event.target.blur();" type="text" placeholder="Recherche...">
       </div>
-      <div class="col-md-8">
+      <div class="col-md-4">
+        <div v-if="processedCorrepondences.length > 0" class="btn-group btn-group-sm d-inline-block" role="group"
+          aria-label="Choose ongoing, past or all">
+          <input @click="correspondenceFilter = 'ongoing'" type="radio" class="btn-check" name="select_by_age"
+            id="select_by_age_ongoing" autocomplete="off" :checked="correspondenceFilter === 'ongoing'">
+          <label class="btn btn-secondary" for="select_by_age_ongoing">
+            En cours
+          </label>
+          <input @click="correspondenceFilter = 'past'" type="radio" class="btn-check" name="select_by_age"
+            id="select_by_age_past" autocomplete="off" :checked="correspondenceFilter === 'past'">
+          <label class="btn btn-secondary" for="select_by_age_past">
+            Passées
+          </label>
+          <input @click="correspondenceFilter = 'all'" type="radio" class="btn-check" name="select_by_age"
+            id="select_by_age_all" autocomplete="off" :checked="correspondenceFilter === 'all'">
+          <label class="btn btn-secondary" for="select_by_age_all">
+            Toutes
+          </label>
+        </div>
+      </div>
+      <div class="col-md-4">
         <div class="d-inline-flex align-items-center justify-content-between w-100">
-          <div v-if="processedCorrepondences.length > 0" class="btn-group d-inline-block" role="group"
-            aria-label="Choose ongoing, past or all">
-            <input @click="correspondenceFilter = 'ongoing'" type="radio" class="btn-check" name="select_by_age"
-              id="select_by_age_ongoing" autocomplete="off" :checked="correspondenceFilter === 'ongoing'">
-            <label class="btn btn-secondary" for="select_by_age_ongoing">
-              En cours
-            </label>
-            <input @click="correspondenceFilter = 'past'" type="radio" class="btn-check" name="select_by_age"
-              id="select_by_age_past" autocomplete="off" :checked="correspondenceFilter === 'past'">
-            <label class="btn btn-secondary" for="select_by_age_past">
-              Passées
-            </label>
-            <input @click="correspondenceFilter = 'all'" type="radio" class="btn-check" name="select_by_age" id="select_by_age_all"
-              autocomplete="off" :checked="correspondenceFilter === 'all'">
-            <label class="btn btn-secondary" for="select_by_age_all">
-              Toutes
-            </label>
-          </div>
-          <div v-if="processedCorrepondences.length > 1" class="btn-group d-inline-block ms-2" role="group"
+          <div v-if="processedCorrepondences.length > 1" class="btn-group btn-group-sm d-inline-block" role="group"
             aria-label="Choose order">
             <input @click="sortDirection = 1" type="radio" class="btn-check" name="direction_correspondence"
               id="option_correspondence_1" autocomplete="off" :checked="sortDirection === 1">
@@ -48,7 +49,18 @@
               </svg>
             </label>
           </div>
-          <div class="d-inline-block ps-2 ms-auto">
+          <button v-if="isReferringDoctor && !addingCorrespondence" @click="addingCorrespondence = true" type="button"
+            class="btn btn-sm btn-primary d-flex align-items-center justify-content-center ms-1 d-md-none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
+              <path
+                d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+              <path
+                d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+            </svg>
+            Ajouter
+          </button>
+          <div class="d-inline-block ms-auto">
             <div v-if="processedCorrepondences.length > 1" class="d-flex align-items-center fst-italic">
               ({{ processedCorrepondences.length }} éléments)
             </div>
@@ -59,7 +71,7 @@
         </div>
       </div>
     </div>
-    <div class="overflow-auto scroll-pane">
+    <div class="row overflow-auto scroll-pane d-flex flex-wrap">
       <template v-if="correspondences.length > 0 && processedCorrepondences.length === 0">
         <p>Aucune correspondance ne correspond à la sélection.</p>
       </template>
@@ -74,19 +86,17 @@
   <template v-else>
     <p>Il n'y a aucune correspondance sur ce dossier.</p>
   </template>
-  <template v-if="isReferringDoctor">
-    <button v-show="!addingCorrespondence" @click="addingCorrespondence = true" type="button"
-      class="btn btn-primary d-flex align-items-center justify-content-center py-2 mt-3">
-      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
-        class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
-        <path
-          d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
-        <path
-          d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
-      </svg>
-      Ajouter
-    </button>
-  </template>
+  <button v-if="isReferringDoctor && !addingCorrespondence" @click="addingCorrespondence = true" type="button"
+    class="btn btn-primary d-flex align-items-center justify-content-center py-2 mt-3 d-none d-md-block">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+      class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
+      <path
+        d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+      <path
+        d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+    </svg>
+    Ajouter
+  </button>
 </template>
 
 <!-- eslint-disable prettier/prettier -->
@@ -136,10 +146,14 @@ export default {
           result = [...this.correspondences];
           break;
         case "past":
-          result = this.correspondences.filter(c => new Date(c.dateUntil) < new Date());
+          result = this.correspondences.filter(
+            c => new Date(c.dateUntil).toISOString().split('T')[0] < new Date().toISOString().split('T')[0]
+          );
           break;
         case "ongoing":
-          result = this.correspondences.filter(c => new Date(c.dateUntil) >= new Date());
+          result = this.correspondences.filter(
+            c => new Date(c.dateUntil).toISOString().split('T')[0] >= new Date().toISOString().split('T')[0]
+          );
           break;
         default:
           result = [...this.correspondences];
@@ -181,6 +195,6 @@ export default {
 <!-- eslint-disable prettier/prettier -->
 <style scoped>
 .scroll-pane {
-  max-height: calc(100vh - 15rem);
+  max-height: calc(100vh - 16rem);
 }
 </style>
