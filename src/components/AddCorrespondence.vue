@@ -2,7 +2,7 @@
 <template>
   <div class="p-1 col-md-3" style="min-height: 12.5rem;">
     <div ref="newCorrespondence" class="card h-100 bg-light">
-      <form @submit.prevent="submitAddCorrespondence" novalidate>
+      <form @submit.prevent="submitAddCorrespondence" class="needs-validation" novalidate>
         <div class="card-header">
           <div class="d-inline-flex align-items-center w-100">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar3"
