@@ -7,15 +7,18 @@
           <div class="nav nav-pills nav-justified flex-lg-column" role="tablist">
             <button class="nav-link active" id="info-tab" data-bs-toggle="pill" data-bs-target="#info-pane"
               type="button" role="tab" aria-controls="info-pane" aria-selected="true">
-              {{ role === "DOCTOR" ? "Informations" : "Médecin référent" }}
+              <span class="d-none d-md-block">{{ role === "DOCTOR" ? "Informations" : "Médecin référent" }}</span>
+              <span class="d-md-none">{{ role === "DOCTOR" ? "Infos" : "Référent" }}</span>
             </button>
             <button class="nav-link" id="file-tab" data-bs-toggle="pill" data-bs-target="#file-pane" type="button"
               role="tab" aria-controls="file-pane" aria-selected="false">
-              Dossier médical
+              <span class="d-none d-md-block">Dossier médical</span>
+              <span class="d-md-none">Dossier</span>
             </button>
             <button class="nav-link" id="correspondence-tab" data-bs-toggle="pill" data-bs-target="#correspondence-pane"
               type="button" role="tab" aria-controls="correspondence-pane" aria-selected="false">
-              Médecins correspondants
+              <span class="d-none d-md-block">Médecins correspondants</span>
+              <span class="d-md-none">Correspondants</span>
             </button>
             <button v-if="role === 'DOCTOR'" @click="$router.go(-1)" class="nav-link text-secondary" type="button">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -29,7 +32,7 @@
             </button>
           </div>
         </div>
-        <div v-if="role === 'DOCTOR'" class="py-2 my-0 text-center">
+        <div v-if="role === 'DOCTOR'" class="py-2 my-0 text-center d-none d-md-block">
           <span class="badge rounded-pill text-bg-secondary p-2">
             <span class="fst-italic">{{ file.id }} - </span>
             {{ file.firstname }} {{ file.lastname }}
