@@ -11,6 +11,7 @@ export function filterFn(str) {
         if (o instanceof Array) {
           return o.some((e) => filterRec(e));
         } else {
+          delete o.id;
           return Object.values(o).some((e) => filterRec(e));
         }
       default:
