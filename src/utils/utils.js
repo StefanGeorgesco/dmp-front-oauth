@@ -2,7 +2,7 @@
 export function filterFn(str) {
     
   function filterRec(o) {
-    if (!o) return true;
+    if (o === null) return true;
     
     switch (typeof o) {
       case "string":

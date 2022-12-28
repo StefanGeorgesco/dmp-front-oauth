@@ -157,8 +157,8 @@ export default {
     };
   },
   async created() {
-    this.typeFilter = this.types[0],
-      this.fetchItems();
+    this.typeFilter = this.types[0];
+    this.fetchItems();
   },
   watch: {
     fetchedItems: {
