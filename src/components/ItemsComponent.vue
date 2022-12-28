@@ -6,15 +6,16 @@
         class="form-control form-control-sm" type="text" placeholder="Recherche...">
     </div>
     <div class="col-sm-6 col-md-4">
-      <select v-if="fetchedItems.length > 0" v-model="typeFilter" @change="$event.target.blur();" class="form-select form-select-sm">
+      <select v-if="fetchedItems.length > 0" v-model="typeFilter" @change="$event.target.blur(); cancelEditing()"
+        class="form-select form-select-sm">
         <option v-for="t in types" :key="t.value" :value="t" v-text="t.category"></option>
       </select>
     </div>
     <div class="col-md-4">
       <div class="d-inline-flex align-items-center justify-content-between w-100">
         <img :src="typeFilter.imgurl" alt="" height="30" width="30" />
-        <div v-if="fetchedItems.length > 0 && processedItems.length - 1 * editing > 1" class="btn-group btn-group-sm d-inline-block ms-2"
-          role="group" aria-label="Choose order">
+        <div v-if="fetchedItems.length > 0 && processedItems.length - 1 * editing > 1"
+          class="btn-group btn-group-sm d-inline-block ms-2" role="group" aria-label="Choose order">
           <input @click="sortDirection = 1" type="radio" class="btn-check" name="direction_item" id="option_item_1"
             autocomplete="off" :checked="sortDirection === 1">
           <label class="btn btn-secondary" for="option_item_1">
@@ -61,16 +62,16 @@
       <p>Aucun élément ne correspond à la sélection</p>
     </template>
     <ItemComponent v-for="item in processedItems" :key="item.id" :item-value="item" :types="types"
-      :global-editing="editing"
-      @editing-start="startEditing" @editing-canceled="cancelEditing" @editing-end="completeEditing" />
+      :global-editing="editing" @editing-start="startEditing" @editing-canceled="cancelEditing"
+      @editing-end="completeEditing" />
   </div>
   <template v-else>
     <p>Il n'y a aucun élément médical sur ce dossier.</p>
   </template>
   <button v-if="role === 'DOCTOR' && !editing" @click="addItem" type="button"
     class="btn btn-primary d-flex align-items-center justify-content-center py-2 mt-3 d-none d-md-block">
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-file-earmark-plus me-2"
-      viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+      class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
       <path
         d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
       <path
@@ -157,7 +158,7 @@ export default {
   },
   async created() {
     this.typeFilter = this.types[0],
-    this.fetchItems();
+      this.fetchItems();
   },
   watch: {
     fetchedItems: {
@@ -206,8 +207,8 @@ export default {
     },
     completeEditing() {
       this.editing = false;
-      this.typeFilter.value = "";
-      this.searchString = "";
+      this.typeFilter = this.types[0],
+        this.searchString = "";
       this.fetchItems();
     },
     addItem() {
