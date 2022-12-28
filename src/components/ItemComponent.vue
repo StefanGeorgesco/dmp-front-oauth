@@ -162,7 +162,7 @@
                   <div v-if="!item.editing" class="form-control-plaintext" style="white-space: pre-line">
                     {{ item.text }}
                   </div>
-                  <textarea v-else v-model.trim="item.text" id="mail_text" required class="form-control" rows="4">
+                  <textarea v-else v-model.trim="item.text" id="mail_text" required class="form-control" rows="3">
                   </textarea>
                   <div class="invalid-feedback">
                     Le texte du courrier est obligatoire.

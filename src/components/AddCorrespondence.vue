@@ -34,7 +34,8 @@
               <label for="doctor_input" class="form-label">* Médecin correspondant</label>
               <ObjectFinder object-type="doctor" :object-value="doctor?.id ? doctor : null" :object-rep-fn="toString"
                 :object-filter-fn="objectFilter" @new-selection="updateSelection"
-                :hasError="mustCheck && !correspondence?.doctorId" :noError="mustCheck && correspondence?.doctorId" />
+                :has-error="mustCheck && !Boolean(correspondence?.doctorId)"
+                :no-error="mustCheck && Boolean(correspondence?.doctorId)" />
               <input type="text" class="d-none" id="doctor_input" :value="correspondence?.doctorId" required>
               <div class="invalid-feedback">
                 Le médecin est obligatoire.
@@ -91,7 +92,11 @@ export default {
     let tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
     this.tomorrow = tomorrow;
-    this.reset();
+    this.correspondence = {
+      dateUntil: null,
+      doctorId: null,
+      patientFileId: this.patientFileId,
+    };
   },
   mounted() {
     this.$refs.newCorrespondence.scrollIntoView(false);

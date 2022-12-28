@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div v-if="items.length > 0" class="row g-2 pb-3 mb-2 border-bottom">
+  <div v-if="items.length - 1 * editing > 0" class="row g-2 pb-3 mb-2 border-bottom">
     <div class="col-sm-6 col-md-4">
       <input v-if="fetchedItems.length > 0" v-model="searchString" @keyup.esc="searchString = ''; $event.target.blur();"
         class="form-control form-control-sm" type="text" placeholder="Recherche...">
@@ -66,12 +66,12 @@
       @editing-end="completeEditing" />
   </div>
   <template v-else>
-    <p>Il n'y a aucun élément médical sur ce dossier.</p>
+    <p>Il n'y a aucun élément médical {{ role === "PATIENT" ? "dans votre" : "sur ce" }} dossier.</p>
   </template>
   <button v-if="role === 'DOCTOR' && !editing" @click="addItem" type="button"
     class="btn btn-primary d-flex align-items-center justify-content-center py-2 mt-3 d-none d-md-block">
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
-      class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20 " fill="currentColor"
+      class="bi bi-file-earmark-plus me-2 mb-1" viewBox="0 0 16 16">
       <path
         d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
       <path

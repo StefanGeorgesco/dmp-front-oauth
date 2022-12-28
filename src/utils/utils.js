@@ -11,8 +11,10 @@ export function filterFn(str) {
         if (o instanceof Array) {
           return o.some((e) => filterRec(e));
         } else {
-          delete o.id;
-          return Object.values(o).some((e) => filterRec(e));
+          return Object.entries(o)
+          .filter((e) => e[0] !== "id")
+          .map((e) => e[1])
+          .some((e) => filterRec(e));
         }
       default:
         return false;
