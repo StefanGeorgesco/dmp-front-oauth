@@ -20,7 +20,7 @@
               {{ file.referringDoctorLastname }} ({{ file.referringDoctorSpecialties.join(", ") }})
             </span>
             <span v-if="role === 'ADMIN'" @click="updatingReferringDoctor = true"
-              class="ms-2 btn btn-primary d-inline-flex align-items-center py-2">
+              class="ms-2 btn btn-primary py-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil"
                 viewBox="0 0 16 16">
                 <path
