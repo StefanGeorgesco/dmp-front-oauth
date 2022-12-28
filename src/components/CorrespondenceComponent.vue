@@ -11,7 +11,7 @@
             <path
               d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
           </svg>
-          <a role="button" data-bs-toggle="modal" :data-bs-target="'#deleteModal-' + correspondence.id" class="ms-auto">
+          <a v-if="canDelete" role="button" data-bs-toggle="modal" :data-bs-target="'#deleteModal-' + correspondence.id" class="ms-auto">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-trash-fill"
               viewBox="0 0 16 16">
               <path
