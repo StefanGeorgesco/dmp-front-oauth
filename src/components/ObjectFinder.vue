@@ -1,8 +1,12 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="d-flex align-items-center form-control p-0 m-0" :class="{ 'error': hasError, 'noError': noError }">
+  <div v-if="readOnly">
+    <div class="form-control-plaintext">{{ objectRepFn(selectedOject) }}</div>
+  </div>
+  <div v-else class="d-flex align-items-center form-control p-0 m-0" :class="{ 'error': hasError, 'noError': noError }">
     <div class="position-relative flex-fill d-flex flex-column">
-      <div class="btn btn-sm btn-primary py-2 px-3 m-1" v-if="selectedOject">
+      <div class="btn btn-sm py-2 px-3 m-1" :class="{ 'btn-primary': !disabled, 'btn-light': disabled }"
+        v-if="selectedOject" :disabled="disabled">
         {{ objectRepFn(selectedOject) }}
       </div>
       <input @keyup.esc="clear" @blur="delayedClear" v-debounce:300ms="searchObjects" class="col-12 py-1 m-1"
@@ -69,7 +73,14 @@ export default {
       type: Boolean,
       default: false,
     },
-    disabled: Boolean,
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
