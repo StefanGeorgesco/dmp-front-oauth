@@ -36,7 +36,7 @@
             </RouterLink>
             <RouterLink to="/add-patient-file" v-if="type === 'patientFile' && role === 'DOCTOR'"
               class="btn btn-primary d-flex align-items-center justify-content-center py-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                 class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
                 <path
                   d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />

@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div v-if="items.length - 1 * editing > 0" class="row g-2 pb-3 mb-2 border-bottom">
+  <div v-if="items.length - 1 * editing > 0" class="row g-1 pb-3 mb-2 border-bottom">
     <div class="col-sm-6 col-md-4">
       <input v-if="fetchedItems.length > 0" v-model="searchString" @keyup.esc="searchString = ''; $event.target.blur();"
         class="form-control form-control-sm" type="text" placeholder="Recherche...">
@@ -13,7 +13,7 @@
     </div>
     <div class="col-md-4">
       <div class="d-inline-flex align-items-center justify-content-between w-100">
-        <img :src="typeFilter.imgurl" alt="" height="30" width="30" />
+        <img :src="typeFilter.imgurl" alt="" height="20" width="20" />
         <div v-if="fetchedItems.length > 0 && processedItems.length - 1 * editing > 1"
           class="btn-group btn-group-sm d-inline-block ms-2" role="group" aria-label="Choose order">
           <input @click="sortDirection = 1" type="radio" class="btn-check" name="direction_item" id="option_item_1"

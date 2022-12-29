@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="p-2 col-md-12">
+  <div class="p-2 col-12 col-xxl-11">
     <div class="card h-100 shadow-sm" :class="{ 'bg-light': item.editing }">
       <form ref="form" @submit.prevent="submitSaveItem" class="needs-validation" novalidate>
         <div class="card-header">
@@ -15,13 +15,6 @@
               {{ item.authoringDoctorSpecialties.join(", ") }}
             </div>
             <div class="me-auto"></div>
-            <button v-if="item.editing" type="submit" class="btn btn-primary me-1">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check"
-                viewBox="0 0 16 16">
-                <path
-                  d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
-              </svg>
-            </button>
             <template v-if="!globalEditing && !item.editing && isAuthor">
               <a role="button" class="btn btn-primary me-1" @click="startEditing">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil"
@@ -39,13 +32,6 @@
                 </svg>
               </a>
             </template>
-            <a v-if="item.editing" role="button" class="btn btn-secondary" @click="cancelEditing">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x"
-                viewBox="0 0 16 16">
-                <path
-                  d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-              </svg>
-            </a>
           </div>
           <div v-if="item.id" class="fst-italic my-0 ms-2 d-xl-none">
             Créé par {{ item.authoringDoctorFirstname }}
@@ -204,6 +190,41 @@
                   <textarea v-else v-model.trim="item.comments" id="item_comments" row="2" class="form-control"
                     rows="3">
                   </textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="item.editing" class="card-footer">
+          <div class="row justify-content-center">
+            <div class="col-5 col-xl-4">
+              <div class="row gy-2 gx-5">
+                <div class="col-md-6">
+                  <div class="row">
+                    <button type="submit"
+                      class="btn btn-sm btn-primary d-inline-flex align-item-center justify-content-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                        class="bi bi-check me-1" viewBox="0 0 16 16">
+                        <path
+                          d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+                      </svg>
+                      {{ item.id ? "Enregistrer" : "Créer" }}
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="row">
+                    <a role="button"
+                      class="col-md-6 btn btn-sm btn-secondary flex-grow-1 d-inline-flex align-item-center justify-content-center"
+                      @click="cancelEditing">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                        class="bi bi-x me-1" viewBox="0 0 16 16">
+                        <path
+                          d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                      </svg>
+                      Annuler
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
