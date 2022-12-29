@@ -4,7 +4,7 @@
     <div class="row mb-3">
       <h2 id="top">Créer un dossier {{ type === "doctor" ? "de médecin" : "patient" }}</h2>
     </div>
-    <form v-show="!created" @submit.prevent="submitAddFile" @input="editing = true" class="needs-validation" novalidate
+    <form v-show="!created" @submit.prevent="submitAddFile" class="needs-validation" novalidate
       autocomplete="off">
       <div class="row g-3">
         <div class="col-md-4">
@@ -184,6 +184,7 @@
 <script>
 import { nextTick } from 'vue';
 import { Modal } from 'bootstrap';
+import hash from "object-hash";
 import { Service } from "../services/services.js";
 import { useMessagesStore } from "../stores/messagesStore";
 import { useLoaderStore } from '../stores/loaderStore';
@@ -208,7 +209,6 @@ export default {
   },
   data() {
     return {
-      editing: false,
       created: false,
       mustCheck: false,
       creationMessage: "",
@@ -231,9 +231,16 @@ export default {
           country: "",
         },
       },
+      fileHash: "",
     }
   },
+  computed: {
+    dataChanged() {
+      return this.fileHash !== hash(this.file);
+    },
+  },
   async created() {
+    this.fileHash = hash(this.file);
     if (this.type === "doctor") {
       try {
         let response = await Service.getSpecialties();
@@ -246,7 +253,7 @@ export default {
     }
   },
   async beforeRouteLeave(to) {
-    if (to.name === "login" || !this.editing)
+    if (to.name === "login" || !this.dataChanged)
       return true;
     
     let modalEl = this.$refs.discard_changes_modal;
@@ -287,7 +294,7 @@ export default {
           this.creationMessage = `Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ${response.data.id} pour ${response.data.firstname} ${response.data.lastname} a bien été créé. Veuillez transmettre ce code secret au ${this.type === "doctor" ? "médecin" : "patient"} afin qu'il puisse créer son compte : `;
           this.creationCode = `${response.data.securityCode}`;
           this.created = true;
-          this.editing = false;
+          this.fileHash = hash(this.file);
         } catch (error) {
           if (error.response.data?.message) {
             this.setErrorMessage(error.response.data.message);

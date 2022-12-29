@@ -13,6 +13,7 @@
     "bootstrap": "^5.2.0",
     "buffer": "^6.0.3",
     "keycloak-js": "^20.0.0",
+    "object-hash": "^3.0.0",
     "pinia": "^2.0.16",
     "vue": "^3.2.37",
     "vue-debounce": "^4.0.0",

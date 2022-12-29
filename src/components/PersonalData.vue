@@ -6,7 +6,7 @@
         <div class="row">
           <h1 id="top" class="h2">Données personnelles</h1>
         </div>
-        <form @submit.prevent="submitUpdateFile" @input="editing = true;" class="row mb-3 g-2 pt-3 needs-validation"
+        <form @submit.prevent="submitUpdateFile" class="row mb-3 g-2 pt-3 needs-validation"
           novalidate autocomplete="off">
           <label for="id" class="col-md-4 col-form-label fw-semibold">Identifiant</label>
           <div class="col-md-8">
@@ -192,9 +192,10 @@
 
 <!-- eslint-disable prettier/prettier -->
 <script>
-import { nextTick } from 'vue';
+import { nextTick } from "vue";
 import { mapState, mapActions } from "pinia";
-import { Modal } from 'bootstrap';
+import { Modal } from "bootstrap";
+import hash from "object-hash";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useMessagesStore } from "../stores/messagesStore";
 import { useLoaderStore } from '../stores/loaderStore';
@@ -208,7 +209,6 @@ export default {
   },
   data() {
     return {
-      editing: false,
       update: false,
       file: {
         id: "",
@@ -227,13 +227,20 @@ export default {
           country: "",
         },
       },
+      fileHash: "",
     };
+  },
+  computed: {
+    dataChanged() {
+      return this.fileHash !== hash(this.file);
+    },
+    ...mapState(useAuthUserStore, ["role"]),
   },
   async created() {
     this.init();
   },
   async beforeRouteLeave(to) {
-    if (to.name === "login" || !this.editing)
+    if (to.name === "login" || !this.dataChanged)
       return true;
 
     let modalEl = this.$refs.discard_changes_modal;
@@ -245,9 +252,6 @@ export default {
       confirmButton.addEventListener('click', () => { modal.hide(); resolve(true); });
       modal.show();
     });
-  },
-  computed: {
-    ...mapState(useAuthUserStore, ["role"]),
   },
   methods: {
     moveUp() {
@@ -263,8 +267,8 @@ export default {
       try {
         let response = await getService();
         this.file = response.data;
+        this.fileHash = hash(this.file);
         this.update = false;
-        this.editing = false;
         nextTick(() => {
           document.querySelector("form").classList.remove("was-validated");
           this.moveUp();
@@ -286,7 +290,7 @@ export default {
       this.file.address = address;
     },
     async submitUpdateFile($event) {
-      if (!this.editing) {
+      if (!this.dataChanged) {
         this.setSuccessMessage("Données inchangées.");
         this.moveUp();
         return;
@@ -306,7 +310,6 @@ export default {
           this.setSuccessMessage("Les données ont bien été modifiées.");
           this.file = response.data;
           this.update = false;
-          this.editing = false;
         } catch (error) {
           if (error.response.data?.message) {
             this.setErrorMessage(error.response.data.message);
