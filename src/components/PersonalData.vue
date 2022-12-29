@@ -309,6 +309,7 @@ export default {
           let response = await updateService(this.file);
           this.setSuccessMessage("Les données ont bien été modifiées.");
           this.file = response.data;
+          this.fileHash = hash(this.file);
           this.update = false;
         } catch (error) {
           if (error.response.data?.message) {
