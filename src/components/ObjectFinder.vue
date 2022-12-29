@@ -14,8 +14,10 @@
         :disabled="disabled" v-show="!disabled" autofocus>
       <div class="position-absolute top-100 start-0 end-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
         style="z-index: 1000; max-height: 50vh;" v-show="foundObjects.length > 0">
-        <div class="tag-option" v-for="o in foundObjects" :key="o.id" @click="select(o)">
-          {{ objectRepFn(o) }}
+        <div class="list-group list-group-flush">
+          <a href="#" class="list-group-item list-group-item-action" v-for="o in foundObjects" :key="o.id" @click="select(o)">
+            {{ objectRepFn(o) }}
+          </a>
         </div>
       </div>
     </div>
@@ -138,10 +140,5 @@ export default {
 
 .noError {
   border-color: #198754;
-}
-
-.tag-option:hover {
-  cursor: pointer;
-  background-color: #eeeeee;
 }
 </style>

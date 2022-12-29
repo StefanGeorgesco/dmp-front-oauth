@@ -6,8 +6,11 @@
       placeholder="Recherche..." aria-label="Search">
     <div class="position-absolute top-100 start-0 end-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
       style="z-index: 1000; max-height: 33vh;" v-show="foundAddresses.length > 0">
-      <div class="option-item" v-for="address in foundAddresses" :key="address.properties.id" @click="select(address)">
-        {{ address.properties.label }}
+      <div class="list-group list-group-flush">
+        <a href="#" class="list-group-item list-group-item-action" v-for="address in foundAddresses"
+          :key="address.properties.id" @click="select(address)">
+          {{ address.properties.label }}
+        </a>
       </div>
     </div>
   </div>
@@ -132,10 +135,5 @@ input {
 
 input:focus {
   outline: 2px solid lightgray;
-}
-
-.option-item:hover {
-  cursor: pointer;
-  background-color: #eeeeee;
 }
 </style>

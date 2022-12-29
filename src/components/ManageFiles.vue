@@ -10,9 +10,12 @@
           <input @keyup.esc="clear" @blur="delayedClear" v-model="searchString" type="text" @input="findFiles"
             class="form-control" placeholder="Recherche...">
           <div class="position-absolute top-100 start-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
-            v-show="foundFiles.length > 0">
-            <div class="option-item" v-for="file in foundFiles" :key="file.id" @click="select(file)">
-              {{ file.id }} {{ file.firstname }} {{ file.lastname }}
+            style="z-index: 1000; max-height: 70vh;" v-show="foundFiles.length > 0">
+            <div class="list-group list-group-flush">
+              <a href="#" class="list-group-item list-group-item-action" v-for="file in foundFiles" :key="file.id"
+                @click="select(file)">
+                {{ file.id }} {{ file.firstname }} {{ file.lastname }}
+              </a>
             </div>
           </div>
         </div>
@@ -149,8 +152,5 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style>
-.option-item:hover {
-  cursor: pointer;
-  background-color: #eeeeee;
-}
+
 </style>

@@ -11,8 +11,11 @@
         class="flex-fill py-1 m-1" style="outline: none; border: none;" placeholder="Ajouter...">
       <div class="position-absolute top-100 start-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
         style="z-index: 1000; max-height: 50vh;" v-show="filteredOptions.length > 0">
-        <div class="tag-option" v-for="o in filteredOptions" :key="o.id" @click="add(o)">
-          {{ o.id }} - {{ o.description }}
+        <div class="list-group list-group-flush">
+          <a href="#" class="list-group-item list-group-item-action" v-for="o in filteredOptions" :key="o.id"
+            @click="add(o)">
+            {{ o.id }} - {{ o.description }}
+          </a>
         </div>
       </div>
     </div>
@@ -92,10 +95,5 @@ export default {
 
 .noError {
   border-color: #198754;
-}
-
-.tag-option:hover {
-  cursor: pointer;
-  background-color: #eeeeee;
 }
 </style>
