@@ -20,7 +20,7 @@
               <span class="d-none d-md-block">Médecins correspondants</span>
               <span class="d-md-none">Correspondants</span>
             </button>
-            <button v-if="role === 'DOCTOR'" @click="$router.go(-1)" class="nav-link text-secondary" type="button">
+            <RouterLink to="/main" v-if="role === 'DOCTOR'" class="nav-link text-secondary">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-backspace me-1 mb-1" viewBox="0 0 16 16">
                 <path
@@ -29,7 +29,7 @@
                   d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z" />
               </svg>
               Retour
-            </button>
+            </RouterLink>
           </div>
         </div>
         <div v-if="role === 'DOCTOR'" class="py-2 my-0 text-center d-none d-md-block">
