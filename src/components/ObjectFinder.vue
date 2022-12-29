@@ -4,12 +4,12 @@
     <div class="form-control-plaintext">{{ objectRepFn(selectedOject) }}</div>
   </div>
   <div v-else class="d-flex align-items-center form-control p-0 m-0" :class="{ 'error': hasError, 'noError': noError }">
-    <div class="position-relative flex-fill d-flex flex-column">
+    <div class="position-relative flex-fill d-flex flex-column p-1">
       <div class="btn btn-sm py-2 px-3 m-1" :class="{ 'btn-primary': !disabled, 'btn-light': disabled }"
         v-if="selectedOject" :disabled="disabled">
         {{ objectRepFn(selectedOject) }}
       </div>
-      <input @keyup.esc="clear" @blur="delayedClear" v-debounce:300ms="searchObjects" class="col-12 py-1 m-1"
+      <input @keyup.esc="clear" @blur="delayedClear" v-debounce:300ms="searchObjects" class="col-12 py-1 m-1 me-2"
         style="outline: none; border: none;" placeholder="Rechercher..." v-model="searchString" type="text"
         :disabled="disabled" v-show="!disabled" autofocus>
       <div class="position-absolute top-100 start-0 end-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
