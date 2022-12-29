@@ -4,8 +4,7 @@
     <div class="row mb-3">
       <h2 id="top">Créer un dossier {{ type === "doctor" ? "de médecin" : "patient" }}</h2>
     </div>
-    <form v-show="!created" @submit.prevent="submitAddFile" class="needs-validation" novalidate
-      autocomplete="off">
+    <form v-show="!created" @submit.prevent="submitAddFile" class="needs-validation" novalidate autocomplete="off">
       <div class="row g-3">
         <div class="col-md-4">
           <label for="id" class="form-label">* Identifiant</label>
@@ -121,7 +120,7 @@
               </svg>
               Créer
             </button>
-            <div @click="$router.go(-1);"
+            <RouterLink :to="type === 'doctor' ? '/manage-doctors' : '/manage-patient-files'"
               class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                 class="bi bi-backspace me-2" viewBox="0 0 16 16">
@@ -131,7 +130,7 @@
                   d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z" />
               </svg>
               Retour
-            </div>
+            </RouterLink>
           </div>
         </div>
       </div>
@@ -255,7 +254,7 @@ export default {
   async beforeRouteLeave(to) {
     if (to.name === "login" || !this.dataChanged)
       return true;
-    
+
     let modalEl = this.$refs.discard_changes_modal;
     let confirmButton = this.$refs.ok_button;
     let modal = Modal.getOrCreateInstance(modalEl);
