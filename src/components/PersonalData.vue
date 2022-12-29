@@ -268,6 +268,7 @@ export default {
       }
       let form = $event.target;
       if (form.checkValidity()) {
+        form.classList.remove("was-validated");
         let updateService;
         if (this.role === "DOCTOR") {
           updateService = Service.updateDoctorDetails;

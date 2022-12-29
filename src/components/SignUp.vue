@@ -109,9 +109,9 @@ export default {
     },
     async submitSignUp($event) {
       let form = $event.target;
-      form.classList.add("was-validated");
       this.checkPasswordRepeat = true;
       if (form.checkValidity() && this.passwordRepeat === this.user.password) {
+        form.classList.remove("was-validated");
         try {
           await Service.signUp(this.user);
           this.setSuccessMessage("Le compte a bien été créé. Veuillez vous connecter.");
@@ -123,6 +123,7 @@ export default {
           nextTick(this.moveUp);
         }
       } else {
+        form.classList.add("was-validated");
         this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
         nextTick(() => {
           [...document.querySelectorAll(".invalid-feedback")].filter(

@@ -247,6 +247,8 @@ export default {
     async submitAddFile($event) {
       let form = $event.target;
       if (form.checkValidity()) {
+        form.classList.remove("was-validated");
+        this.mustCheck = false;
         let service;
         if (this.type === "doctor") {
           service = Service.addDoctor;

@@ -257,7 +257,6 @@
 
 <!-- eslint-disable prettier/prettier -->
 <script>
-import { nextTick } from 'vue';
 import { mapActions, mapState } from "pinia";
 import { Modal } from 'bootstrap';
 import { useMessagesStore } from "../stores/messagesStore.js";
@@ -343,6 +342,9 @@ export default {
     async submitSaveItem($event) {
       let form = $event.target;
       if (form.checkValidity()) {
+        form.classList.remove("was-validated");
+        this.mustCheck = false;
+        
         let service;
         let action;
 
@@ -372,11 +374,6 @@ export default {
         form.classList.add("was-validated");
         this.mustCheck = true;
         this.setErrorMessage("Les données saisies sont incorrectes.");
-        nextTick(() => {
-          [...document.querySelectorAll(".invalid-feedback")].filter(
-            el => getComputedStyle(el, null).display === "block"
-          )[0]?.scrollIntoView(false);
-        });
       }
     },
     async submitDeleteItem() {

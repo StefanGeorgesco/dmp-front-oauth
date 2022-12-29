@@ -133,6 +133,8 @@ export default {
     async submitAddCorrespondence($event) {
       let form = $event.target;
       if (form.checkValidity()) {
+        form.classList.remove("was-validated");
+        this.mustCheck = false;
         let id = this.setLoader();
         try {
           await Service.addCorrespondence(this.correspondence);
