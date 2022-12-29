@@ -161,11 +161,29 @@
       <br>
     </div>
   </div>
+  <div class="modal fade" ref="discard_changes_modal" tabindex="-1" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-label">Abandon des modifications</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Voulez-vous vraiment quitter la page ? Les données saisies seront perdues.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button ref="ok_button" type="button" class="btn btn-primary">Confirmer</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <!-- eslint-disable prettier/prettier -->
 <script>
 import { nextTick } from 'vue';
+import { Modal } from 'bootstrap';
 import { Service } from "../services/services.js";
 import { useMessagesStore } from "../stores/messagesStore";
 import { useLoaderStore } from '../stores/loaderStore';
@@ -227,12 +245,19 @@ export default {
       }
     }
   },
-  beforeRouteLeave(to) {
-    if (to.name !== "login" && this.editing) {
-      const answer = window.confirm("Voulez-vous vraiment quitter la page ? Les données saisies seront perdues.")
-      if (!answer)
-        return false;
-    }
+  async beforeRouteLeave(to) {
+    if (to.name === "login" || !this.editing)
+      return true;
+    
+    let modalEl = this.$refs.discard_changes_modal;
+    let confirmButton = this.$refs.ok_button;
+    let modal = Modal.getOrCreateInstance(modalEl);
+
+    return await new Promise((resolve) => {
+      modalEl.addEventListener('hidden.bs.modal', () => resolve(false));
+      confirmButton.addEventListener('click', () => { modal.hide(); resolve(true); });
+      modal.show();
+    });
   },
   methods: {
     moveUp() {
