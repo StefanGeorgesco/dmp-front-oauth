@@ -259,6 +259,7 @@
 <script>
 import { mapActions, mapState } from "pinia";
 import { Modal } from 'bootstrap';
+import hash from "object-hash";
 import { useMessagesStore } from "../stores/messagesStore.js";
 import { useAuthUserStore } from "../stores/authUserStore.js";
 import { useLoaderStore } from '../stores/loaderStore';
@@ -287,12 +288,10 @@ export default {
   },
   data() {
     return {
-      item: { ...this.itemValue },
-      mustCheck: false,
+      item: null,
+      mustCheck: null,
+      itemHash: null,
     };
-  },
-  mounted() {
-    if (!this.itemValue.id) this.$refs.form.scrollIntoView();
   },
   computed: {
     imgurl() {
@@ -301,7 +300,20 @@ export default {
     isAuthor() {
       return this.item.authoringDoctorId === this.userId;
     },
+    dataChanged() {
+      return this.itemHash !== hash(
+        Object.entries(this.item)
+          .filter((e) => e[0] !== 'editing')
+          .reduce((o, e) => ({ ...o, [e[0]]: e[1] }), {})
+      );
+    },
     ...mapState(useAuthUserStore, ["userId"]),
+  },
+  created() {
+    this.resetItem();
+  },
+  mounted() {
+    if (!this.itemValue.id) this.$refs.form.scrollIntoView();
   },
   watch: {
     itemValue() {
@@ -311,6 +323,11 @@ export default {
   methods: {
     resetItem() {
       this.item = { ...this.itemValue };
+      this.itemHash = hash(
+        Object.entries(this.item)
+          .filter((e) => e[0] !== 'editing')
+          .reduce((o, e) => ({ ...o, [e[0]]: e[1] }), {})
+      );
       this.mustCheck = false;
     },
     clearItem() {
@@ -340,11 +357,15 @@ export default {
       this.item.recipientDoctorSpecialties = selection?.specialties.map((s) => s.description);
     },
     async submitSaveItem($event) {
+      if (this.item.id && !this.dataChanged) {
+        this.setSuccessMessage("Données inchangées.");
+        return;
+      }
       let form = $event.target;
       if (form.checkValidity()) {
         form.classList.remove("was-validated");
         this.mustCheck = false;
-        
+
         let service;
         let action;
 

@@ -144,6 +144,7 @@ export default {
       canEdit: null,
       updatingReferringDoctor: false,
       referringDoctor: null,
+      referringDoctorId: null,
     };
   },
   async created() {
@@ -158,6 +159,9 @@ export default {
     },
   },
   computed: {
+    dataChanged() {
+      return this.referringDoctorId !== this.referringDoctor.id;
+    },
     viewFileUrl() {
       return `/view-${this.type === "doctor" ? "doctor" : "patient-file"}/${this.file.id}`;
     },
@@ -204,6 +208,7 @@ export default {
       try {
         let response = await Service.getDoctor(this.file.referringDoctorId);
         this.referringDoctor = response.data;
+        this.referringDoctorId = this.referringDoctor.id;
       } catch (error) {
         if (error.response.data?.message) {
           this.setErrorMessage(error.response.data.message);
@@ -216,11 +221,16 @@ export default {
       this.referringDoctor = selection;
     },
     async submitUpdateReferringDoctor() {
+      if (!this.dataChanged) {
+        this.setSuccessMessage("Données inchangées.");
+        return;
+      }
       let id = this.setLoader();
       try {
         await Service.updateReferringDoctor(this.file.id, this.referringDoctor);
         this.setSuccessMessage("Le médecin référent a bien été enregistré.");
         this.updatingReferringDoctor = false;
+        this.referringDoctorId = this.referringDoctor.id;
         this.$emit("referringDoctorUpdated", this.file);
       } catch (error) {
         this.canEdit = false;
