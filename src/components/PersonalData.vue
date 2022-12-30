@@ -291,7 +291,7 @@ export default {
     },
     async submitUpdateFile($event) {
       if (!this.dataChanged) {
-        this.addSuccessMessage("Données inchangées.");
+        this.addInfoMessage("Données inchangées.");
         this.moveUp();
         return;
       }
@@ -329,7 +329,7 @@ export default {
         });
       }
     },
-    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage", "addInfoMessage"]),
     ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 };

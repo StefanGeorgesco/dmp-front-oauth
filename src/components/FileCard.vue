@@ -222,7 +222,7 @@ export default {
     },
     async submitUpdateReferringDoctor() {
       if (!this.dataChanged) {
-        this.addSuccessMessage("Données inchangées.");
+        this.addInfoMessage("Données inchangées.");
         return;
       }
       let id = this.setLoader();
@@ -251,7 +251,7 @@ export default {
     objectFilter(o) {
       return o.id !== this.file.referringDoctorId;
     },
-    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage", "addInfoMessage"]),
     ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 };

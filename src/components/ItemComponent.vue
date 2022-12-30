@@ -358,7 +358,7 @@ export default {
     },
     async submitSaveItem($event) {
       if (this.item.id && !this.dataChanged) {
-        this.addSuccessMessage("Données inchangées.");
+        this.addInfoMessage("Données inchangées.");
         return;
       }
       let form = $event.target;
@@ -414,7 +414,7 @@ export default {
       }
 
     },
-    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage", "addInfoMessage"]),
     ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 }

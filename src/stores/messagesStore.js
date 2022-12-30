@@ -3,39 +3,52 @@ import { defineStore } from "pinia";
 export const useMessagesStore = defineStore({
   id: "messages",
   state: () => ({
-    errorMessage: "",
-    successMessage: "",
-    showErrorMessage: false,
-    showSuccessMessage: false,
-    errorMessageTimeout: null,
-    successMessageTimeout: null,
-    showErrorMessageTimeout: null,
-    showSuccessMessageTimeout: null,
+    messages: [],
+    id: 0,
   }),
   actions: {
+    incrementId() {
+      this.id++;
+    },
     addErrorMessage(message) {
-      clearTimeout(this.errorMessageTimeout);
-      clearTimeout(this.showErrorMessageTimeout);
-      this.errorMessageTimeout = setTimeout(() => {
-        this.errorMessage = "";
-      }, 5000);
-      this.showErrorMessageTimeout = setTimeout(() => {
-        this.showErrorMessage = false;
+      let id = this.id;
+      this.messages.push({
+        id,
+        type: "danger",
+        text: message,
+      });
+      setTimeout(() => {
+        this.deleteMessage(id);
       }, 3000);
-      this.errorMessage = message;
-      this.showErrorMessage = true;
+      this.incrementId();
     },
     addSuccessMessage(message) {
-      clearTimeout(this.successMessageTimeout);
-      clearTimeout(this.showSuccessMessageTimeout);
-      this.successMessageTimeout = setTimeout(() => {
-        this.successMessage = "";
-      }, 5000);
-      this.showSuccessMessageTimeout = setTimeout(() => {
-        this.showSuccessMessage = false;
+      let id = this.id;
+      this.messages.push({
+        id,
+        type: "success",
+        text: message,
+      });
+      setTimeout(() => {
+        this.deleteMessage(id);
       }, 3000);
-      this.successMessage = message;
-      this.showSuccessMessage = true;
+      this.incrementId();
+    },
+    addInfoMessage(message) {
+      let id = this.id;
+      this.messages.push({
+        id,
+        type: "info",
+        text: message,
+      });
+      setTimeout(() => {
+        this.deleteMessage(id);
+      }, 3000);
+      this.incrementId();
+    },
+    deleteMessage(id) {
+      let i = this.messages.map((m) => m.id).indexOf(id);
+      if (i > -1) this.messages.splice(i, 1);
     },
   },
 });

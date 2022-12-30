@@ -61,16 +61,13 @@
     </div>
   </nav>
   <div class="position-fixed top-0 start-50 translate-middle-x mt-2" style="z-index: 1040;">
-    <transition name="errorMessageTransition">
-      <div v-show="showErrorMessage" class="alert alert-danger py-2" role="alert">
-        {{ errorMessage }}
+    <TransitionGroup name="messagesTransition" tag="div">
+      <div v-for="message in messages" :key="message.id" role="alert"
+        class="alert d-flex align-items-center justify-content-between py-2" :class="`alert-${message.type}`">
+        {{ message.text }}
+        <button @click="deleteMessage(message.id)" type="button" class="btn-close ms-2" aria-label="Close"></button>
       </div>
-    </transition>
-    <transition name="successMessageTransition">
-      <div v-show="showSuccessMessage" class="alert alert-success py-2" role="alert">
-        {{ successMessage }}
-      </div>
-    </transition>
+    </TransitionGroup>
   </div>
   <div v-show="loading" class="position-fixed top-50 start-50 translate-middle" style="z-index: 1100;">
     <div class="spinner-border" role="status">
@@ -117,12 +114,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(useMessagesStore, [
-      "errorMessage",
-      "successMessage",
-      "showErrorMessage",
-      "showSuccessMessage",
-    ]),
+    ...mapState(useMessagesStore, ["messages"]),
     ...mapState(useAuthUserStore, ["isAuthenticated", "role", "username"]),
     ...mapState(useLoaderStore, ["loading"]),
   },
@@ -131,6 +123,7 @@ export default {
       if (this.$refs.navbarMenuRef.classList.contains("show"))
         this.$refs.navbarTogglerRef.click();
     },
+    ...mapActions(useMessagesStore, ["deleteMessage"]),
     ...mapActions(useAuthUserStore, ["initAuth", "login", "logout"]),
   },
 };
@@ -138,17 +131,13 @@ export default {
 
 <!-- eslint-disable prettier/prettier -->
 <style>
-.errorMessageTransition-enter-from,
-.successMessageTransition-enter-from,
-.errorMessageTransition-leave-to,
-.successMessageTransition-leave-to {
-  opacity: 0;
+.messagesTransition-enter-active,
+.messagesTransition-leave-active {
+  transition: all 1s ease;
 }
 
-.errorMessageTransition-enter-active,
-.successMessageTransition-enter-active,
-.errorMessageTransition-leave-active,
-.successMessageTransition-leave-active {
-  transition: opacity 2s;
+.messagesTransition-enter-from,
+.messagesTransition-leave-to {
+  opacity: 0;
 }
 </style>
