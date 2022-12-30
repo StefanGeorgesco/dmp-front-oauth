@@ -25,13 +25,13 @@ axios.interceptors.response.use(
     const msgStore = useMessagesStore();
     let status = error.response.status;
     if (status >= 500) {
-      msgStore.setErrorMessage(
+      msgStore.addErrorMessage(
         "Impossible de se connecter au serveur. Veuillez réessayer."
       );
     } else if (status === 401) {
-      msgStore.setErrorMessage("Non autorisé.");
+      msgStore.addErrorMessage("Non autorisé.");
     } else if (status === 406) {
-      msgStore.setErrorMessage(Object.values(error.response.data).join(", "));
+      msgStore.addErrorMessage(Object.values(error.response.data).join(", "));
     }
     return Promise.reject(error);
   }

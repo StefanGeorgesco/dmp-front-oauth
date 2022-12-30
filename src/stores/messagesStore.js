@@ -13,7 +13,7 @@ export const useMessagesStore = defineStore({
     showSuccessMessageTimeout: null,
   }),
   actions: {
-    setErrorMessage(message) {
+    addErrorMessage(message) {
       clearTimeout(this.errorMessageTimeout);
       clearTimeout(this.showErrorMessageTimeout);
       this.errorMessageTimeout = setTimeout(() => {
@@ -25,7 +25,7 @@ export const useMessagesStore = defineStore({
       this.errorMessage = message;
       this.showErrorMessage = true;
     },
-    setSuccessMessage(message) {
+    addSuccessMessage(message) {
       clearTimeout(this.successMessageTimeout);
       clearTimeout(this.showSuccessMessageTimeout);
       this.successMessageTimeout = setTimeout(() => {

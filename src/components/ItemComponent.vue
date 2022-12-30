@@ -358,7 +358,7 @@ export default {
     },
     async submitSaveItem($event) {
       if (this.item.id && !this.dataChanged) {
-        this.setSuccessMessage("Données inchangées.");
+        this.addSuccessMessage("Données inchangées.");
         return;
       }
       let form = $event.target;
@@ -383,10 +383,10 @@ export default {
           await service(this.item);
           this.item.editing = false;
           this.$emit("editingEnd");
-          this.setSuccessMessage(`L'élément a bien été ${action}.`);
+          this.addSuccessMessage(`L'élément a bien été ${action}.`);
         } catch (error) {
           if (error.response.data?.message) {
-            this.setErrorMessage(error.response.data.message);
+            this.addErrorMessage(error.response.data.message);
           }
         } finally {
           this.clearLoader(id);
@@ -394,7 +394,7 @@ export default {
       } else {
         form.classList.add("was-validated");
         this.mustCheck = true;
-        this.setErrorMessage("Les données saisies sont incorrectes.");
+        this.addErrorMessage("Les données saisies sont incorrectes.");
       }
     },
     async submitDeleteItem() {
@@ -404,17 +404,17 @@ export default {
         await Service.deleteItem(this.item);
         this.item.editing = false;
         this.$emit("editingEnd");
-        this.setSuccessMessage(`L'élément a bien été supprimé.`);
+        this.addSuccessMessage(`L'élément a bien été supprimé.`);
       } catch (error) {
         if (error.response.data?.message) {
-          this.setErrorMessage(error.response.data.message);
+          this.addErrorMessage(error.response.data.message);
         }
       } finally {
         this.clearLoader(id);
       }
 
     },
-    ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage"]),
     ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 }

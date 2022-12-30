@@ -62,7 +62,7 @@
           <h2 class="h5 pt-3 pb-1 mb-0">Adresse</h2>
           <div class="col-md-4"></div>
           <AddressPicker class="col-md-8 mb-3" v-show="update" @new-selection="fillAddress"
-            :error-message-service="setErrorMessage" :set-loader-service="setLoader"
+            :error-message-service="addErrorMessage" :set-loader-service="setLoader"
             :clear-loader-service="clearLoader" />
           <div class="w-100 m-0"></div>
           <label for="street1" class="col-md-4 col-form-label fw-semibold">
@@ -275,7 +275,7 @@ export default {
         });
       } catch (error) {
         if (error.response.data) {
-          this.setErrorMessage(error.response.data.message);
+          this.addErrorMessage(error.response.data.message);
         }
       }
     },
@@ -291,7 +291,7 @@ export default {
     },
     async submitUpdateFile($event) {
       if (!this.dataChanged) {
-        this.setSuccessMessage("Données inchangées.");
+        this.addSuccessMessage("Données inchangées.");
         this.moveUp();
         return;
       }
@@ -307,13 +307,13 @@ export default {
         let id = this.setLoader();
         try {
           let response = await updateService(this.file);
-          this.setSuccessMessage("Les données ont bien été modifiées.");
+          this.addSuccessMessage("Les données ont bien été modifiées.");
           this.file = response.data;
           this.fileHash = hash(this.file);
           this.update = false;
         } catch (error) {
           if (error.response.data?.message) {
-            this.setErrorMessage(error.response.data.message);
+            this.addErrorMessage(error.response.data.message);
           }
         } finally {
           this.clearLoader(id);
@@ -321,7 +321,7 @@ export default {
         }
       } else {
         form.classList.add("was-validated");
-        this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
+        this.addErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
         nextTick(() => {
           [...document.querySelectorAll(".invalid-feedback")].filter(
             el => getComputedStyle(el, null).display === "block"
@@ -329,7 +329,7 @@ export default {
         });
       }
     },
-    ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage"]),
     ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 };

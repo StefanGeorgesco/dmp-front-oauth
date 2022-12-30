@@ -69,7 +69,7 @@
       </div>
       <fieldset class="row g-3">
         <legend>Adresse</legend>
-        <AddressPicker class="col-md-4" @new-selection="fillAddress" :error-message-service="setErrorMessage"
+        <AddressPicker class="col-md-4" @new-selection="fillAddress" :error-message-service="addErrorMessage"
           :set-loader-service="setLoader" :clear-loader-service="clearLoader" />
         <div class="w-100 m-0"></div>
         <div class="col-md-4">
@@ -246,7 +246,7 @@ export default {
         this.specialties = response.data;
       } catch (error) {
         if (error.response.data) {
-          this.setErrorMessage(error.response.data.message);
+          this.addErrorMessage(error.response.data.message);
         }
       }
     }
@@ -289,14 +289,14 @@ export default {
         let id = this.setLoader();
         try {
           let response = await service(this.file);
-          this.setSuccessMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} a bien été créé.`);
+          this.addSuccessMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} a bien été créé.`);
           this.creationMessage = `Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ${response.data.id} pour ${response.data.firstname} ${response.data.lastname} a bien été créé. Veuillez transmettre ce code secret au ${this.type === "doctor" ? "médecin" : "patient"} afin qu'il puisse créer son compte : `;
           this.creationCode = `${response.data.securityCode}`;
           this.created = true;
           this.fileHash = hash(this.file);
         } catch (error) {
           if (error.response.data?.message) {
-            this.setErrorMessage(error.response.data.message);
+            this.addErrorMessage(error.response.data.message);
           }
           nextTick(this.moveUp);
         } finally {
@@ -305,7 +305,7 @@ export default {
       } else {
         form.classList.add("was-validated");
         this.mustCheck = true;
-        this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
+        this.addErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
         nextTick(() => {
           [...document.querySelectorAll(".invalid-feedback")].filter(
             el => getComputedStyle(el, null).display === "block"
@@ -315,10 +315,10 @@ export default {
     },
     copy() {
       navigator.clipboard.writeText(this.creationCode)
-        .then(() => this.setSuccessMessage("Le code a bien été copié dans le presse-papier."))
-        .catch(() => this.setErrorMessage("Impossible de copier le code. Veuillez le copier 'à la main'."));
+        .then(() => this.addSuccessMessage("Le code a bien été copié dans le presse-papier."))
+        .catch(() => this.addErrorMessage("Impossible de copier le code. Veuillez le copier 'à la main'."));
     },
-    ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage"]),
     ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 };

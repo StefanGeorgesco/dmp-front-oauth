@@ -117,14 +117,14 @@ export default {
       this.file = response.data;
     } catch (error) {
       if (error.response.data?.message) {
-        this.setErrorMessage(error.response.data.message);
+        this.addErrorMessage(error.response.data.message);
       }
     } finally {
       this.clearLoader(id);
     }
   },
   methods: {
-    ...mapActions(useMessagesStore, ["setErrorMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage"]),
     ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 }

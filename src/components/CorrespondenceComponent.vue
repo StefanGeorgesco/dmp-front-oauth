@@ -81,14 +81,14 @@ export default {
       try {
         await Service.deleteCorrespondence(this.correspondence);
         this.$emit("correspondenceUpdated");
-        this.setSuccessMessage("La correspondance a bien été supprimée.");
+        this.addSuccessMessage("La correspondance a bien été supprimée.");
       } catch (error) {
         if (error.response.data?.message) {
-          this.setErrorMessage(error.response.data.message);
+          this.addErrorMessage(error.response.data.message);
         }
       }
     },
-    ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage"]),
   },
 }
 </script>

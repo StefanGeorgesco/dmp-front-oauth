@@ -140,10 +140,10 @@ export default {
           await Service.addCorrespondence(this.correspondence);
           this.reset();
           this.$emit("correspondenceAdded");
-          this.setSuccessMessage("La correspondance a bien été créée.");
+          this.addSuccessMessage("La correspondance a bien été créée.");
         } catch (error) {
           if (error.response.data?.message) {
-            this.setErrorMessage(error.response.data.message);
+            this.addErrorMessage(error.response.data.message);
           }
         } finally {
           this.clearLoader(id);
@@ -151,7 +151,7 @@ export default {
       } else {
         form.classList.add("was-validated");
         this.mustCheck = true;
-        this.setErrorMessage("Les données saisies sont incorrectes.");
+        this.addErrorMessage("Les données saisies sont incorrectes.");
       }
     },
     cancelAction() {
@@ -166,7 +166,7 @@ export default {
     objectFilter(o) {
       return o.id !== this.userId;
     },
-    ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage"]),
     ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 };

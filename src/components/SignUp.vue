@@ -114,17 +114,17 @@ export default {
         form.classList.remove("was-validated");
         try {
           await Service.signUp(this.user);
-          this.setSuccessMessage("Le compte a bien été créé. Veuillez vous connecter.");
+          this.addSuccessMessage("Le compte a bien été créé. Veuillez vous connecter.");
           this.$router.push("/");
         } catch (error) {
           if (error.response.data?.message) {
-            this.setErrorMessage(error.response.data.message);
+            this.addErrorMessage(error.response.data.message);
           }
           nextTick(this.moveUp);
         }
       } else {
         form.classList.add("was-validated");
-        this.setErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
+        this.addErrorMessage("Certaines données saisies sont manquantes ou incorrectes.");
         nextTick(() => {
           [...document.querySelectorAll(".invalid-feedback")].filter(
             el => getComputedStyle(el, null).display === "block"
@@ -132,7 +132,7 @@ export default {
         });
       }
     },
-    ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage"]),
   }
 };
 </script>

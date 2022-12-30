@@ -180,10 +180,10 @@ export default {
       try {
         await service(this.file.id);
         this.$emit("fileDeleted");
-        this.setSuccessMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ${this.file.id} a bien été supprimé, ainsi que le compte utilisateur associé.`)
+        this.addSuccessMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ${this.file.id} a bien été supprimé, ainsi que le compte utilisateur associé.`)
       } catch (error) {
         if (error.response.data) {
-          this.setErrorMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ne peut pas être supprimé.${this.type === "doctor" ? " Il est probablement référencé dans au moins un dossier patient." : ""}`);
+          this.addErrorMessage(`Le dossier ${this.type === "doctor" ? "de médecin" : "patient"} ne peut pas être supprimé.${this.type === "doctor" ? " Il est probablement référencé dans au moins un dossier patient." : ""}`);
         }
       } finally {
         this.clearLoader(id);
@@ -211,7 +211,7 @@ export default {
         this.referringDoctorId = this.referringDoctor.id;
       } catch (error) {
         if (error.response.data?.message) {
-          this.setErrorMessage(error.response.data.message);
+          this.addErrorMessage(error.response.data.message);
         }
       } finally {
         this.clearLoader(id);
@@ -222,20 +222,20 @@ export default {
     },
     async submitUpdateReferringDoctor() {
       if (!this.dataChanged) {
-        this.setSuccessMessage("Données inchangées.");
+        this.addSuccessMessage("Données inchangées.");
         return;
       }
       let id = this.setLoader();
       try {
         await Service.updateReferringDoctor(this.file.id, this.referringDoctor);
-        this.setSuccessMessage("Le médecin référent a bien été enregistré.");
+        this.addSuccessMessage("Le médecin référent a bien été enregistré.");
         this.updatingReferringDoctor = false;
         this.referringDoctorId = this.referringDoctor.id;
         this.$emit("referringDoctorUpdated", this.file);
       } catch (error) {
         this.canEdit = false;
         if (error.response.data?.message) {
-          this.setErrorMessage(error.response.data.message);
+          this.addErrorMessage(error.response.data.message);
         }
       } finally {
         this.clearLoader(id);
@@ -251,7 +251,7 @@ export default {
     objectFilter(o) {
       return o.id !== this.file.referringDoctorId;
     },
-    ...mapActions(useMessagesStore, ["setErrorMessage", "setSuccessMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage", "addSuccessMessage"]),
     ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 };

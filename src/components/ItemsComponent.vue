@@ -191,7 +191,7 @@ export default {
         this.fetchedItems = response.data;
       } catch (error) {
         if (error.response.data?.message) {
-          this.setErrorMessage(error.response.data.message);
+          this.addErrorMessage(error.response.data.message);
         }
       } finally {
         this.clearLoader(id);
@@ -221,7 +221,7 @@ export default {
         editing: true,
       });
     },
-    ...mapActions(useMessagesStore, ["setErrorMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage"]),
     ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 }

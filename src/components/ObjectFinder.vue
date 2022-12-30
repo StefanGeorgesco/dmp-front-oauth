@@ -108,7 +108,7 @@ export default {
         this.foundObjects = response.data.filter(this.objectFilterFn);
       } catch (error) {
         if (error.response.data?.message) {
-          this.setErrorMessage(error.response.data.message);
+          this.addErrorMessage(error.response.data.message);
         }
       } finally {
         this.clearLoader(id);
@@ -126,7 +126,7 @@ export default {
       this.selectedOject = o;
       this.$emit("newSelection", o);
     },
-    ...mapActions(useMessagesStore, ["setErrorMessage"]),
+    ...mapActions(useMessagesStore, ["addErrorMessage"]),
     ...mapActions(useLoaderStore, ["setLoader", "clearLoader"]),
   },
 }
