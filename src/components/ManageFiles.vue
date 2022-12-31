@@ -1,54 +1,52 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6 col-xl-5">
-        <div class="row text-center mt-3 py-1 mb-1">
-          <h1 class="h2">Gérer les dossiers {{ type === "doctor" ? "des médecins" : "patients" }}</h1>
-        </div>
-        <div class="row position-relative justify-content-center g-3 py-1 my-1">
-          <input @keyup.esc="clear" @blur="delayedClear" v-model="searchString" type="text" @input="findFiles"
-            class="form-control" placeholder="Recherche...">
-          <div class="position-absolute top-100 start-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
-            style="z-index: 1000; max-height: 70vh;" v-show="foundFiles.length > 0">
-            <div class="list-group list-group-flush">
-              <a href="#" class="list-group-item list-group-item-action" v-for="file in foundFiles" :key="file.id"
-                @click="select(file)">
-                {{ file.id }} {{ file.firstname }} {{ file.lastname }}
-              </a>
-            </div>
+  <div class="row justify-content-center">
+    <div class="col-sm-9 col-md-8 col-lg-6 col-xl-5 col-xxl-4 p-4">
+      <div class="row text-center mb-3">
+        <h1 class="h2">Gérer les dossiers {{ type === "doctor" ? "des médecins" : "patients" }}</h1>
+      </div>
+      <div class="row position-relative justify-content-center mb-3">
+        <input @keyup.esc="clear" @blur="delayedClear" v-model="searchString" type="text" @input="findFiles"
+          class="form-control" placeholder="Recherche...">
+        <div class="position-absolute top-100 start-0 mt-2 p-2 border rounded shadow bg-white overflow-auto"
+          style="z-index: 1000; max-height: 70vh;" v-show="foundFiles.length > 0">
+          <div class="list-group list-group-flush">
+            <a href="#" class="list-group-item list-group-item-action" v-for="file in foundFiles" :key="file.id"
+              @click="select(file)">
+              {{ file.id }} {{ file.firstname }} {{ file.lastname }}
+            </a>
           </div>
         </div>
-        <div v-if="selectedFile" class="row py-1 my-1">
-          <FileCard @referring-doctor-updated="updateFile" @close="clear" @file-deleted="clear" :type="type"
-            :file="selectedFile">
-          </FileCard>
-        </div>
-        <div class="row justify-content-center mt-3 mb-3 py-1">
-          <div class="col-md-8">
-            <RouterLink to="/add-doctor" v-if="type === 'doctor' && role === 'ADMIN'"
-              class="btn btn-primary d-flex align-items-center justify-content-center py-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
-                <path
-                  d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
-                <path
-                  d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
-              </svg>
-              Ajouter un médecin
-            </RouterLink>
-            <RouterLink to="/add-patient-file" v-if="type === 'patientFile' && role === 'DOCTOR'"
-              class="btn btn-primary d-flex align-items-center justify-content-center py-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
-                <path
-                  d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
-                <path
-                  d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
-              </svg>
-              Ajouter un dossier patient
-            </RouterLink>
-          </div>
+      </div>
+      <div v-if="selectedFile" class="row mb-3">
+        <FileCard @referring-doctor-updated="updateFile" @close="clear" @file-deleted="clear" :type="type"
+          :file="selectedFile">
+        </FileCard>
+      </div>
+      <div class="row mb-3 justify-content-center">
+        <div class="col-md-8">
+          <RouterLink to="/add-doctor" v-if="type === 'doctor' && role === 'ADMIN'"
+            class="btn btn-primary d-flex align-items-center justify-content-center py-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+              class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
+              <path
+                d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+              <path
+                d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+            </svg>
+            Ajouter un médecin
+          </RouterLink>
+          <RouterLink to="/add-patient-file" v-if="type === 'patientFile' && role === 'DOCTOR'"
+            class="btn btn-primary d-flex align-items-center justify-content-center py-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+              class="bi bi-file-earmark-plus me-2" viewBox="0 0 16 16">
+              <path
+                d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+              <path
+                d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+            </svg>
+            Ajouter un dossier patient
+          </RouterLink>
         </div>
       </div>
     </div>

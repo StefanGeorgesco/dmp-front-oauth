@@ -1,11 +1,9 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="container">
-    <div class="row mb-3">
-      <h2 id="top">Créer un dossier {{ type === "doctor" ? "de médecin" : "patient" }}</h2>
-    </div>
-    <form v-show="!created" @submit.prevent="submitAddFile" class="needs-validation" novalidate autocomplete="off">
-      <div class="row g-3">
+  <div class="row justify-content-center g-2">
+    <div class="col-md-8">
+      <h1 class="h2 my-3" id="top">Créer un dossier {{ type === "doctor" ? "de médecin" : "patient" }}</h1>
+      <form v-show="!created" @submit.prevent="submitAddFile" class="row needs-validation" novalidate autocomplete="off">
         <div class="col-md-4">
           <label for="id" class="form-label">* Identifiant</label>
           <input @input="file.id = file.id.toLocaleUpperCase();" v-model.trim="file.id" type="text" class="form-control"
@@ -49,14 +47,15 @@
             La date de naissance ne peut pas être dans le futur.
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="d-md-block d-lg-none"></div>
+        <div class="col-md-6 col-lg-4">
           <label for="phone" class="form-label">* Numéro de téléphone</label>
           <input v-model.trim="file.phone" type="text" class="form-control" id="phone" required>
           <div class="invalid-feedback">
             Le numéro de téléphone est obligatoire.
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6 col-lg-4">
           <label for="email" class="form-label">* Adresse e-mail</label>
           <input v-model="file.email" type="email" class="form-control" id="email" required>
           <div class="invalid-feedback" v-show="file.email.length === 0">
@@ -66,98 +65,99 @@
             L'adresse email doit respecter le format.
           </div>
         </div>
-      </div>
-      <fieldset class="row g-3">
-        <legend>Adresse</legend>
-        <AddressPicker class="col-md-4" @new-selection="fillAddress" :error-message-service="addErrorMessage"
-          :set-loader-service="setLoader" :clear-loader-service="clearLoader" />
-        <div class="w-100 m-0"></div>
-        <div class="col-md-4">
-          <label for="street1" class="form-label">* Numéro et voie</label>
-          <input v-model.trim="file.address.street1" type="text" class="form-control" id="street1" required>
-          <div class="invalid-feedback">
-            La voie est obligatoire.
+        <fieldset class="row mt-3">
+          <legend>Adresse</legend>
+          <AddressPicker class="col-md-4" @new-selection="fillAddress" :error-message-service="addErrorMessage"
+            :set-loader-service="setLoader" :clear-loader-service="clearLoader" />
+          <div class="w-100 m-0"></div>
+          <div class="col-md-4">
+            <label for="street1" class="form-label">* Numéro et voie</label>
+            <input v-model.trim="file.address.street1" type="text" class="form-control" id="street1" required>
+            <div class="invalid-feedback">
+              La voie est obligatoire.
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label for="street2" class="form-label">Complément d'adresse</label>
+            <input v-model.trim="file.address.street2" type="text" class="form-control" id="street2">
+          </div>
+          <div class="col-md-4">
+            <label for="city" class="form-label">* Commune</label>
+            <input v-model.trim="file.address.city" type="text" class="form-control" id="city" required>
+            <div class="invalid-feedback">
+              La commune est obligatoire.
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label for="state" class="form-label">Etat ou région</label>
+            <input v-model.trim="file.address.state" type="text" class="form-control" id="state">
+          </div>
+          <div class="col-md-4">
+            <label for="zipcode" class="form-label">* Code postal</label>
+            <input v-model.trim="file.address.zipcode" type="text" class="form-control" id="zipcode" required>
+            <div class="invalid-feedback">
+              Le code postal est obligatoire.
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label for="country" class="form-label">* Pays</label>
+            <input v-model.trim="file.address.country" type="text" class="form-control" id="country" required>
+            <div class="invalid-feedback">
+              Le pays est obligatoire.
+            </div>
+          </div>
+        </fieldset>
+        <div class="row justify-content-center">
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 g-0">
+            <div class="vstack gap-2 mt-4 px-2 pb-4">
+              <button class="btn btn-primary d-flex align-items-center justify-content-center py-2" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                  class="bi bi-check me-1" viewBox="0 0 16 16">
+                  <path
+                    d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+                </svg>
+                Créer
+              </button>
+              <RouterLink :to="type === 'doctor' ? '/manage-doctors' : '/manage-patient-files'"
+                class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor"
+                  class="bi bi-backspace me-2" viewBox="0 0 16 16">
+                  <path
+                    d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z" />
+                  <path
+                    d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z" />
+                </svg>
+                Retour
+              </RouterLink>
+            </div>
           </div>
         </div>
-        <div class="col-md-4">
-          <label for="street2" class="form-label">Complément d'adresse</label>
-          <input v-model.trim="file.address.street2" type="text" class="form-control" id="street2">
-        </div>
-        <div class="col-md-4">
-          <label for="city" class="form-label">* Commune</label>
-          <input v-model.trim="file.address.city" type="text" class="form-control" id="city" required>
-          <div class="invalid-feedback">
-            La commune est obligatoire.
-          </div>
-        </div>
-        <div class="col-md-4">
-          <label for="state" class="form-label">Etat ou région</label>
-          <input v-model.trim="file.address.state" type="text" class="form-control" id="state">
-        </div>
-        <div class="col-md-4">
-          <label for="zipcode" class="form-label">* Code postal</label>
-          <input v-model.trim="file.address.zipcode" type="text" class="form-control" id="zipcode" required>
-          <div class="invalid-feedback">
-            Le code postal est obligatoire.
-          </div>
-        </div>
-        <div class="col-md-4">
-          <label for="country" class="form-label">* Pays</label>
-          <input v-model.trim="file.address.country" type="text" class="form-control" id="country" required>
-          <div class="invalid-feedback">
-            Le pays est obligatoire.
-          </div>
-        </div>
-      </fieldset>
-      <div class="row justify-content-center justify-content-md-start">
-        <div class="col-sm-6 col-md-3 g-0">
-          <div class="vstack gap-2 mt-4 px-2 pb-4">
-            <button class="btn btn-primary d-flex align-items-center justify-content-center py-2" type="submit">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
-                class="bi bi-check me-1" viewBox="0 0 16 16">
-                <path
-                  d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
-              </svg>
-              Créer
-            </button>
-            <RouterLink :to="type === 'doctor' ? '/manage-doctors' : '/manage-patient-files'"
-              class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                class="bi bi-backspace me-2" viewBox="0 0 16 16">
-                <path
-                  d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z" />
-                <path
-                  d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z" />
-              </svg>
-              Retour
-            </RouterLink>
-          </div>
-        </div>
-      </div>
-    </form>
-    <div class="row" v-show="created">
-      <div class="col-12">
+      </form>
+      <div class="row" v-show="created">
         <p>
           {{ creationMessage }}
+        </p>
+        <p>
           <span class="d-inline-block rounded px-1 ms-1 bg-light fst-italic user-select-all">
             {{ creationCode }}
           </span>
           <span class="btn btn-success d-inline-block btn-sm ms-3 py-0 mb-1" @click="copy">Copier</span>
         </p>
+        <div class="col-sm-4 col-md-2 mt-2">
+          <RouterLink to="/main"
+            class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+              class="bi bi-backspace me-2" viewBox="0 0 16 16">
+              <path
+                d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z" />
+              <path
+                d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z" />
+            </svg>
+            Retour
+          </RouterLink>
+        </div>
+        <br>
       </div>
-      <div class="col-sm-4 col-md-2 mt-3">
-        <RouterLink to="/main" class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-            class="bi bi-backspace me-2" viewBox="0 0 16 16">
-            <path
-              d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z" />
-            <path
-              d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z" />
-          </svg>
-          Retour
-        </RouterLink>
-      </div>
-      <br>
     </div>
   </div>
   <div class="modal fade" ref="discard_changes_modal" tabindex="-1" aria-labelledby="modal-label" aria-hidden="true">

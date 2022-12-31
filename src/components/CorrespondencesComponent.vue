@@ -14,13 +14,13 @@
         </label>
         <input @click="correspondenceFilter = 'past'" type="radio" class="btn-check" name="select_by_age"
           id="select_by_age_past" autocomplete="off" :checked="correspondenceFilter === 'past'">
-        <label class="btn btn-secondary" for="select_by_age_past">
-          Passées
+        <label class="btn btn-secondary px-3" for="select_by_age_past">
+          Passés
         </label>
         <input @click="correspondenceFilter = 'all'" type="radio" class="btn-check" name="select_by_age"
           id="select_by_age_all" autocomplete="off" :checked="correspondenceFilter === 'all'">
-        <label class="btn btn-secondary" for="select_by_age_all">
-          Toutes
+        <label class="btn btn-secondary px-4" for="select_by_age_all">
+          Tous
         </label>
       </div>
     </div>
