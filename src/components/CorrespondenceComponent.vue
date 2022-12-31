@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="p-1 col-md-3" style="min-height: 12.5rem;">
+  <div class="p-2 col-md-4" style="min-height: 12.5rem;">
     <div class="card h-100 shadow-sm">
       <div class="card-header">
         <div class="d-inline-flex align-items-center w-100">

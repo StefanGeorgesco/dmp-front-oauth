@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="p-2 col-12 col-xxl-11">
+  <div class="p-2">
     <div class="card h-100 shadow-sm" :class="{ 'bg-light': item.editing }">
       <form ref="form" @submit.prevent="submitSaveItem" class="needs-validation" novalidate>
         <div class="card-header">
