@@ -14,9 +14,6 @@ dist
 dist-ssr
 coverage
 *.local
-Dockerfile*
-.dockerignore
-compose.yaml
 
 /cypress/videos/
 /cypress/screenshots/
