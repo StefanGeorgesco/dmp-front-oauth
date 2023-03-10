@@ -8,11 +8,15 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+package-lock.json
 .DS_Store
 dist
 dist-ssr
 coverage
 *.local
+Dockerfile*
+.dockerignore
+compose.yaml
 
 /cypress/videos/
 /cypress/screenshots/
