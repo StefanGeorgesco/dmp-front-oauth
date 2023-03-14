@@ -1,0 +1,11 @@
+server {
+    
+    listen 80;
+
+    root /usr/share/nginx/html;
+
+    location /dmp/ {
+    	try_files $uri /dmp/index.html;
+    }
+
+}
