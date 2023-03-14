@@ -21,12 +21,20 @@ npm install
 ```sh
 npm run dev
 ```
+# docker
+docker compose up -d --build
+# when finished
+docker compose down
+```
 
 ### Compile and Minify for Production
 
 ```sh
 npm run build
 ```
+# docker
+docker build -t stefangeorgesco/dmp-oauth-frontend -f Dockerfile.prod .
+docker push stefangeorgesco/dmp-oauth-frontend
 
 ### Lint with [ESLint](https://eslint.org/)
 
