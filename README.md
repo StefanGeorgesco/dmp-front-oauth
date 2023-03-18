@@ -22,10 +22,9 @@ npm install
 npm run dev
 ```
 # docker
-docker compose up -d --build
+docker compose up -d [--build]
 # when finished
 docker compose down
-```
 
 ### Compile and Minify for Production
 
